@@ -7,7 +7,7 @@ project(
     VERSION 0.1.0
     DESCRIPTION "Poggles is for OpenGGL EnvironmentS"
     HOMEPAGE_URL "https://github.com/lakinwecker/poggles"
-    LANGUAGES CXX
+    LANGUAGES CXX C
 )
 
 include(cmake/project-is-top-level.cmake)
@@ -17,7 +17,13 @@ include(cmake/variables.cmake)
 
 add_library(
     poggles_poggles
-    source/poggles.cpp
+    source/poggles/buffer.cpp
+    source/poggles/debug.cpp
+    source/poggles/program.cpp
+    source/poggles/shader.cpp
+    source/poggles/stb_image.cpp
+    source/poggles/vertex_array.cpp
+    source/poggles/glad.c
 )
 add_library(poggles::poggles ALIAS poggles_poggles)
 
