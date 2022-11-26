@@ -2,7 +2,7 @@
 #include <functional>
 #include <stdexcept>
 
-#include "poggles/glad/glad.h"
+#include <glad/glad.h>
 #include "poggles/poggles_export.hpp"
 
 namespace poggles
