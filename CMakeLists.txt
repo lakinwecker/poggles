@@ -7,7 +7,7 @@ project(
     VERSION 0.1.0
     DESCRIPTION "Poggles is for OpenGGL EnvironmentS"
     HOMEPAGE_URL "https://github.com/lakinwecker/poggles"
-    LANGUAGES CXX C
+    LANGUAGES CXX
 )
 
 include(cmake/project-is-top-level.cmake)
@@ -23,7 +23,7 @@ add_library(
     source/poggles/shader.cpp
     source/poggles/stb_image.cpp
     source/poggles/vertex_array.cpp
-    source/poggles/glad.c
+    source/poggles/texture.cpp
 )
 add_library(poggles::poggles ALIAS poggles_poggles)
 
@@ -62,6 +62,14 @@ target_include_directories(
 )
 
 target_compile_features(poggles_poggles PUBLIC cxx_std_20)
+
+find_package(glad REQUIRED)
+find_package(opengl_system REQUIRED)
+target_link_libraries(
+    poggles_poggles PRIVATE
+    glad::glad
+    opengl::opengl
+)
 
 # ---- Install rules ----
 

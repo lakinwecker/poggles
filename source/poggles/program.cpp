@@ -89,3 +89,29 @@ void poggles::program::set_float(const std::string& name, float value) const
       glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
       value);
 }
+void poggles::program::set_vec3(const std::string& name,
+                                std::span<const float, 3> value) const
+{
+  glUniform3fv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      1,
+      value.data());
+}
+
+void poggles::program::set_vec4(const std::string& name,
+                                std::span<const float, 4> value) const
+{
+  glUniform4fv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      1,
+      value.data());
+}
+void poggles::program::set_mat4(
+    const std::string& name, std::span<const float, 16> value) const  // NOLINT
+{
+  glUniformMatrix4fv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      1,
+      GL_TRUE,
+      value.data());
+}

@@ -13,10 +13,18 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
 endif()
 
+find_package(glad REQUIRED)
+find_package(doctest REQUIRED)
+
 # ---- Tests ----
 
 add_executable(poggles_test source/poggles_test.cpp)
-target_link_libraries(poggles_test PRIVATE poggles::poggles)
+target_link_libraries(
+    poggles_test PRIVATE
+    poggles::poggles
+    glad::glad
+    doctest::doctest
+)
 target_compile_features(poggles_test PRIVATE cxx_std_20)
 
 add_test(NAME poggles_test COMMAND poggles_test)

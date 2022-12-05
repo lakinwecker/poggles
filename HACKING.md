@@ -41,7 +41,7 @@ the project:
     {
       "name": "dev",
       "binaryDir": "${sourceDir}/build/dev",
-      "inherits": ["dev-mode", "ci-<os>"],
+      "inherits": ["dev-mode", "conan", "ci-<os>"],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
@@ -74,6 +74,23 @@ these correspond to in the [`CMakePresets.json`](CMakePresets.json) file.
 `CMakeUserPresets.json` is also the perfect place in which you can put all
 sorts of things that you would otherwise want to pass to the configure command
 in the terminal.
+
+### Dependency manager
+
+The above preset will make use of the [conan][conan] dependency manager. After
+installing it, download the dependencies and generate the necessary CMake
+files by running this command in the project root:
+
+```sh
+conan install . -s build_type=Debug -b missing
+```
+
+Note that if your conan profile does not specify the same compiler used by
+CMake, then that could potentially cause issues. See the [conan docs][profile]
+on profiles.
+
+[conan]: https://conan.io/
+[profile]: https://docs.conan.io/en/latest/using_packages/using_profiles.html
 
 ### Configure, build and test
 

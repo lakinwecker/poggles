@@ -1,10 +1,9 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <string>
 
-#include "poggles/poggles.hpp"
+#include <doctest/doctest.h>
 
-auto main() -> int
+TEST_CASE("WIP - invariant")
 {
-  auto const exported = exported_class {};
-
-  return std::string("poggles") == exported.name() ? 0 : 1;
+    REQUIRE(true == true);
 }
