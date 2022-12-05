@@ -46,10 +46,10 @@ auto poggles::shader::compile() -> bool
     // https://developercommunity.visualstudio.com/t/strerrorlen-s-is-not-supported/160287
     // strerror_s(error_msg.data(), error_msg.size(), errno);
     //#else
-    // error_msg = strerror(errno);
     //#endif
 
-    // spdlog::error("[SHADER] reading {}:\n{}", m_path.string(), errorMsg);
+    error_msg = strerror(errno);
+    std::cerr << "[SHADER] reading " << m_path.string() << ":\n" <<  error_msg << std::endl;
     return false;
   }
 
@@ -72,10 +72,10 @@ auto poggles::shader::compile() -> bool
   // check for errors
   GLint success = -1;
   glGetShaderiv(static_cast<GLuint>(m_shader_id), GL_COMPILE_STATUS, &success);
-  // if (success == 0) {
-  // spdlog::error("[SHADER] compilation log {}:\n{}", m_path.string(), log);
-  //} else {
-  // spdlog::debug("[SHADER] compilation log {}:\n{}", m_path.string(), log);
-  //}
+  if (success == 0) {
+    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n" << log << std::endl;
+  } else {
+    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n" << log << std::endl;
+  }
   return success != 0;
 }
