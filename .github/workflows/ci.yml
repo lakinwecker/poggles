@@ -48,6 +48,16 @@ jobs:
       run: sudo apt-get update -q
         && sudo apt-get install lcov -q -y
 
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with: { python-version: "3.8" }
+
+    - name: Install dependencies
+      run: pip3 install "conan<2"
+        && conan profile new default --detect
+        && conan profile update settings.compiler.libcxx=libstdc++11 default
+        && conan install . -b missing
+
     - name: Configure
       run: cmake --preset=ci-coverage
 
@@ -73,6 +83,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with: { python-version: "3.8" }
+
+    - name: Install dependencies
+      run: pip3 install "conan<2"
+        && conan profile new default --detect
+        && cp .github/clang-12.profile ~/.conan/profiles/default
+        && conan install . -b missing
 
     - name: Configure
       env: { CXX: clang++-12 }
@@ -119,10 +139,28 @@ jobs:
         /usr/bin/clang-tidy clang-tidy
         /usr/bin/clang-tidy-12 120
 
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with: { python-version: "3.8" }
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip3 install "conan<2"
+        conan profile new default --detect
+        if [ ${{ matrix.os }} = ubuntu-latest ]; then
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+        fi
+        conan install . -b missing
+
     - name: Configure
       shell: pwsh
       run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
         -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+
+    - name: Setup PATH
+      if: matrix.os == 'windows-2022' && matrix.type == 'shared'
+      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
 
     - name: Build
       run: cmake --build build --config Release -j 2

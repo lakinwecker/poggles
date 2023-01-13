@@ -38,14 +38,14 @@ public:
   {
     bind();
     glBufferData(
-        m_target, as<GLsizei>(sizeof(T) * data.size()), data.data(), usage);
+        m_target, static_cast<GLsizei>(sizeof(T) * data.size()), data.data(), usage);
   }
   template<typename Wrapper>
   auto data(Wrapper const& matrix, GLenum usage) -> void
   {
     bind();
     data(std::span<const typename Wrapper::value_type>(
-             matrix.data(), as<std::uint64_t>(matrix.size())),
+             matrix.data(), static_cast<std::uint64_t>(matrix.size())),
          usage);
   }
 

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <filesystem>
+#include <span>
 #include <string>
 
 #include "poggles/handle.h"
@@ -48,6 +49,10 @@ public:
       -> void;
   auto set_uint(const std::string& name, unsigned value) const -> void;
   auto set_float(const std::string& name, float value) const -> void;
+
+  void set_vec3(const std::string& name, std::span<const float, 3> value) const;
+  void set_vec4(const std::string& name, std::span<const float, 4> value) const;
+  void set_mat4(const std::string& name, std::span<const float, 16> value) const; // NOLINT
 
   template<size_t N>
   void set_float_array(const std::string& name,

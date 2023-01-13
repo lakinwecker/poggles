@@ -1,5 +1,9 @@
 # Building with CMake
 
+## Dependencies
+
+For a list of dependencies, please refer to [conanfile.py](conanfile.py).
+
 ## Build
 
 This project doesn't require any special command-line flags to build to keep
