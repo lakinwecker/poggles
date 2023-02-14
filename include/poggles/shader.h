@@ -34,10 +34,13 @@ public:
   // Public interface
   [[nodiscard]] auto get_path() const -> std::string { return m_path; }
   [[nodiscard]] auto get_type() const -> GLenum { return m_type; }
-  explicit operator GLuint() const { return static_cast<GLuint>(m_shader_id); }
+  explicit operator shader_id() const
+  {
+    return static_cast<shader_id>(m_shader_handle);
+  }
 
 private:
-  shader_id m_shader_id;
+  shader_handle m_shader_handle;
   GLenum m_type;
 
   std::filesystem::path m_path;

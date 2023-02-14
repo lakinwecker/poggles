@@ -28,17 +28,16 @@ public:
          GLenum data_type);
 
   // Public interface
-  auto bind() -> void
-  {
-    glBindBuffer(m_target, static_cast<GLuint>(m_buffer_id));
-  }
-  explicit operator GLuint() const { return static_cast<GLuint>(m_buffer_id); }
+  auto bind() -> void { glBindBuffer(m_target, m_buffer_handle.id()); }
+  explicit operator buffer_id() const { return m_buffer_handle.id(); }
   template<typename T>
   auto data(const std::span<T>& data, GLenum usage) -> void
   {
     bind();
-    glBufferData(
-        m_target, static_cast<GLsizei>(sizeof(T) * data.size()), data.data(), usage);
+    glBufferData(m_target,
+                 static_cast<GLsizei>(sizeof(T) * data.size()),
+                 data.data(),
+                 usage);
   }
   template<typename Wrapper>
   auto data(Wrapper const& matrix, GLenum usage) -> void
@@ -51,6 +50,6 @@ public:
 
 private:
   GLenum m_target;
-  buffer_id m_buffer_id;
+  buffer_handle m_buffer_handle;
 };
 }  // namespace poggles

@@ -38,6 +38,6 @@ public:
 
 private:
   GLenum m_original_target;
-  texture_id m_texture_id;
+  texture_handle m_texture_id;
 };
 }  // namespace poggles

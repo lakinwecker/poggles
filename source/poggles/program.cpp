@@ -8,11 +8,11 @@ poggles::program::program(std::filesystem::path const& vertex_path,
     : m_vertex(vertex_path, GL_VERTEX_SHADER)
     , m_fragment(fragment_path, GL_FRAGMENT_SHADER)
 {
-  attach(static_cast<GLuint>(m_vertex));
-  attach(static_cast<GLuint>(m_fragment));
-  glLinkProgram(static_cast<GLuint>(m_program_id));
+  attach(static_cast<shader_id>(m_vertex));
+  attach(static_cast<shader_id>(m_fragment));
+  glLinkProgram(static_cast<program_id>(m_program_handle));
 
-  if (!check_link_success(static_cast<GLuint>(m_program_id))) {
+  if (!check_link_success(static_cast<program_id>(m_program_handle))) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }
@@ -32,10 +32,10 @@ auto poggles::program::recompile() -> bool
 
 void poggles::program::use() const
 {
-  glUseProgram(static_cast<GLuint>(m_program_id));
+  glUseProgram(static_cast<program_id>(m_program_handle));
 }
 
-auto poggles::program::check_link_success(GLuint identifier) -> bool
+auto poggles::program::check_link_success(program_id identifier) -> bool
 {
   GLint success = -1;
 
@@ -61,39 +61,39 @@ auto poggles::program::check_link_success(GLuint identifier) -> bool
 void poggles::program::set_bool(const std::string& name, bool value) const
 {
   glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       static_cast<int>(value));
 }
 void poggles::program::set_int(const std::string& name, int value) const
 {
   glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       value);
 }
 void poggles::program::set_texture_sampler(const std::string& name,
                                            GLint texture_num) const
 {
   glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       texture_num - GL_TEXTURE0);
 }
 void poggles::program::set_uint(const std::string& name, unsigned value) const
 {
   glUniform1ui(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       value);
 }
 void poggles::program::set_float(const std::string& name, float value) const
 {
   glUniform1f(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       value);
 }
 void poggles::program::set_vec3(const std::string& name,
                                 std::span<const float, 3> value) const
 {
   glUniform3fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       1,
       value.data());
 }
@@ -102,7 +102,7 @@ void poggles::program::set_vec4(const std::string& name,
                                 std::span<const float, 4> value) const
 {
   glUniform4fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       1,
       value.data());
 }
@@ -110,7 +110,7 @@ void poggles::program::set_mat4(
     const std::string& name, std::span<const float, 16> value) const  // NOLINT
 {
   glUniformMatrix4fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_id), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
       1,
       GL_TRUE,
       value.data());
