@@ -9,10 +9,6 @@
 
 namespace poggles
 {
-// NOTES
-// - Since underlying types are GLuint there's no type safety
-// -
-
 //------------------------------------------------------------------------------
 // An RAII wrapper around a resource that is not a pointer.
 //

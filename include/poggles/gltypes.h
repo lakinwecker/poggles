@@ -13,12 +13,6 @@ concept GLuintValued = requires(T a) {
                            } -> std::convertible_to<GLuint>;
                        };
 
-namespace poggles
-{
-template<typename T>
-class handle;
-}  // namespace poggles
-
 template<typename T>
 class gltype
 {
@@ -41,7 +35,16 @@ public:
 
   T id() const { return m_id; }
   operator T() const { return m_id; }
+  operator bool() const { return m_id != 0; }
 };
+
+// Forward definition of handle
+// Allows handle to construct gltypes
+namespace poggles
+{
+template<typename T>
+class handle;
+}  // namespace poggles
 
 // clang-format off
 // Macro for defining opengl id types
@@ -56,9 +59,9 @@ protected:                                             \
 };
 // clang-format on
 
-// operator bool() { return m_value != 0; }
-// TODO - Improve error messages when trying to cast a GLuint to another type?
-// "This constructor is protected" might be good enough though
+//------------------------------------------------------------------------------
+// Typed OpenGL id wrapper classes
+//------------------------------------------------------------------------------
 
 POGGLES_GL_TYPE_CLASS(program_id)
 POGGLES_GL_TYPE_CLASS(shader_id)
