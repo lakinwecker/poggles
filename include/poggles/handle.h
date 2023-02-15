@@ -22,24 +22,15 @@ namespace poggles
 // can be safely called on the default value.
 //------------------------------------------------------------------------------
 
-// CONS of subclass
-//    - Requires m_value member of subclass
-//    - Handle becomes much less general
-// PROS
-//    - Easily allows for gltypes to be constructed only in this context (or a
-//    similar means)
-//    - Can convert directly to underlying type without needing to define
-//    additional constructors
-
 template<typename T>
-class handle : public T
+class handle
 {
 protected:
   using handle_destructor = std::function<void(T)>;
 
   template<typename D, typename C, typename... Args>
   handle(D&& destructor, C&& constructor, Args&&... args)
-      : T(constructor(std::forward<Args>(args)...))
+      : m_resource(constructor(std::forward<Args>(args)...))
       , m_destructor(destructor)
   {
   }
@@ -48,7 +39,7 @@ public:
   virtual ~handle()
   {
     if (m_destructor) {
-      m_destructor(T(*this));
+      m_destructor(m_resource);
     }
   }
 
@@ -58,31 +49,31 @@ public:
 
   // Moving allowed
   handle(handle<T>&& other) noexcept
-      : T(std::move(static_cast<T&&>(other)))
+      : m_resource(std::move(other.m_resource))
       , m_destructor(std::move(other.m_destructor))
   {
-    static_cast<T&>(*this) = {};
+    other.m_resource = {};
     other.m_destructor = {};
   }
 
   auto operator=(handle<T>&& other) noexcept -> handle<T>&
   {
-    m_destructor(static_cast<T&>(*this));
-    static_cast<T&&>(*this) = std::move(static_cast<T&&>(other));
+    m_destructor(m_resource);
+    m_resource = std::move(other.m_resource);
     m_destructor = std::move(other.m_destructor);
 
-    static_cast<T&>(other) = {};
+    other.m_resource = {};
     other.m_destructor = {};
     return *this;
   }
 
 public:
   // Getters for the m_resource
-  // explicit operator T() const { return m_value; }
-  //[[nodiscard]] auto value() const -> T { return m_resource; }
-  auto id() const -> T { return *this; }
+  [[nodiscard]] auto value() const -> T { return m_resource; }
+  explicit operator T() const { return m_resource; }
 
 private:
+  T m_resource;
   handle_destructor m_destructor;
 };
 
@@ -97,7 +88,7 @@ private:
 //------------------------------------------------------------------------------
 
 template<GLuintValued T>
-class POGGLES_EXPORT gluint_handle : public handle<T>
+class gluint_handle : public handle<T>
 {
 protected:
   using destructor = std::function<void(GLuint)>;
@@ -106,13 +97,15 @@ protected:
   gluint_handle(destructor&& _destructor, C&& _constructor, Args&&... args)
       : handle<T>(_destructor, _constructor, args...)
   {
-    if (this->value() == 0) {
+    if (this->value().id() == 0) {
       throw std::runtime_error("Invalid gluint_handle");
     }
   }
+
+  explicit operator GLuint() const { return this->value().id(); }
 };
 
-class POGGLES_EXPORT shader_handle : public gluint_handle<shader_id>
+class shader_handle : public gluint_handle<shader_id>
 {
 public:
   explicit shader_handle(GLenum type)
@@ -121,7 +114,7 @@ public:
   }
 };
 
-class POGGLES_EXPORT program_handle : public gluint_handle<program_id>
+class program_handle : public gluint_handle<program_id>
 {
 public:
   explicit program_handle()
@@ -131,7 +124,7 @@ public:
 };
 
 template<typename T>
-class POGGLES_EXPORT gen_delete_handle : public gluint_handle<T>
+class gen_delete_handle : public gluint_handle<T>
 {
 public:
   template<typename D, typename G>
@@ -151,7 +144,7 @@ public:
   }
 };
 
-class POGGLES_EXPORT buffer_handle : public gen_delete_handle<buffer_id>
+class buffer_handle : public gen_delete_handle<buffer_id>
 {
 public:
   buffer_handle()
@@ -160,8 +153,7 @@ public:
   }
 };
 
-class POGGLES_EXPORT vertex_array_handle
-    : public gen_delete_handle<vertex_array_id>
+class vertex_array_handle : public gen_delete_handle<vertex_array_id>
 {
 public:
   vertex_array_handle()
@@ -171,7 +163,7 @@ public:
   }
 };
 
-class POGGLES_EXPORT texture_handle : public gen_delete_handle<texture_id>
+class texture_handle : public gen_delete_handle<texture_id>
 {
 public:
   texture_handle()

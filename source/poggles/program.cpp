@@ -60,57 +60,58 @@ auto poggles::program::check_link_success(program_id identifier) -> bool
 
 void poggles::program::set_bool(const std::string& name, bool value) const
 {
-  glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      static_cast<int>(value));
+  glUniform1i(glGetUniformLocation(
+                  static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+              static_cast<int>(value));
 }
 void poggles::program::set_int(const std::string& name, int value) const
 {
-  glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      value);
+  glUniform1i(glGetUniformLocation(
+                  static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+              value);
 }
 void poggles::program::set_texture_sampler(const std::string& name,
                                            GLint texture_num) const
 {
-  glUniform1i(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      texture_num - GL_TEXTURE0);
+  glUniform1i(glGetUniformLocation(
+                  static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+              texture_num - GL_TEXTURE0);
 }
 void poggles::program::set_uint(const std::string& name, unsigned value) const
 {
-  glUniform1ui(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      value);
+  glUniform1ui(glGetUniformLocation(
+                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+               value);
 }
 void poggles::program::set_float(const std::string& name, float value) const
 {
-  glUniform1f(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      value);
+  glUniform1f(glGetUniformLocation(
+                  static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+              value);
 }
 void poggles::program::set_vec3(const std::string& name,
                                 std::span<const float, 3> value) const
 {
-  glUniform3fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      1,
-      value.data());
+  glUniform3fv(glGetUniformLocation(
+                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+               1,
+               value.data());
 }
 
 void poggles::program::set_vec4(const std::string& name,
                                 std::span<const float, 4> value) const
 {
-  glUniform4fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
-      1,
-      value.data());
+  glUniform4fv(glGetUniformLocation(
+                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+               1,
+               value.data());
 }
 void poggles::program::set_mat4(
     const std::string& name, std::span<const float, 16> value) const  // NOLINT
 {
   glUniformMatrix4fv(
-      glGetUniformLocation(static_cast<GLuint>(m_program_handle), name.c_str()),
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()),
+                           name.c_str()),
       1,
       GL_TRUE,
       value.data());

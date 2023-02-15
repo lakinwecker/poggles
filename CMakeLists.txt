@@ -24,6 +24,7 @@ add_library(
     source/poggles/stb_image.cpp
     source/poggles/vertex_array.cpp
     source/poggles/texture.cpp
+    source/poggles/gl_function.cpp
 )
 add_library(poggles::poggles ALIAS poggles_poggles)
 

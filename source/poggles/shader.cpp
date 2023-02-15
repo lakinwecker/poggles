@@ -58,23 +58,27 @@ auto poggles::shader::compile() -> bool
 
   // compile shader
   glShaderSource(
-      static_cast<GLuint>(m_shader_handle), 1, &source_code, nullptr);
-  glCompileShader(static_cast<GLuint>(m_shader_handle));
+      static_cast<GLuint>(m_shader_handle.value()), 1, &source_code, nullptr);
+  glCompileShader(static_cast<GLuint>(m_shader_handle.value()));
 
   // Always log the info, just change the severity
   // based on whether it's an error or not
   GLint log_length = -1;
-  glGetShaderiv(
-      static_cast<GLuint>(m_shader_handle), GL_INFO_LOG_LENGTH, &log_length);
+  glGetShaderiv(static_cast<GLuint>(m_shader_handle.value()),
+                GL_INFO_LOG_LENGTH,
+                &log_length);
   std::string log;
   log.resize(static_cast<size_t>(log_length));
-  glGetShaderInfoLog(
-      static_cast<GLuint>(m_shader_handle), log_length, nullptr, log.data());
+  glGetShaderInfoLog(static_cast<GLuint>(m_shader_handle.value()),
+                     log_length,
+                     nullptr,
+                     log.data());
 
   // check for errors
   GLint success = -1;
-  glGetShaderiv(
-      static_cast<GLuint>(m_shader_handle), GL_COMPILE_STATUS, &success);
+  glGetShaderiv(static_cast<GLuint>(m_shader_handle.value()),
+                GL_COMPILE_STATUS,
+                &success);
   if (success == 0) {
     std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n"
               << log << std::endl;

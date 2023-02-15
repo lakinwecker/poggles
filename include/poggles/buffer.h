@@ -28,8 +28,8 @@ public:
          GLenum data_type);
 
   // Public interface
-  auto bind() -> void { glBindBuffer(m_target, m_buffer_handle.id()); }
-  explicit operator buffer_id() const { return m_buffer_handle.id(); }
+  auto bind() -> void { glBindBuffer(m_target, m_buffer_handle.value()); }
+  explicit operator buffer_id() const { return m_buffer_handle.value(); }
   template<typename T>
   auto data(const std::span<T>& data, GLenum usage) -> void
   {

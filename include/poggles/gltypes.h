@@ -9,50 +9,48 @@
 template<typename T>
 concept GLuintValued = requires(T a) {
                          {
-                           a.value()
+                           a.id()
                            } -> std::convertible_to<GLuint>;
                        };
 
+namespace poggles
+{
 template<typename T>
 class handle;
+}  // namespace poggles
 
 template<typename T>
 class gltype
 {
 protected:
-  T m_value;
+  T m_id;
   // Protected constructor so it can't be created directly (Should only be
-  // created using handle)
+  // created using handle class)
   gltype(T v)
-      : m_value(v)
+      : m_id(v)
   {
   }
 
 public:
   gltype()
-      : m_value(0)
+      : m_id(0)
   {
   }
 
   gltype(gltype<T>& other) = default;
-  gltype<T>& operator=(const gltype<T>& other) = default;
 
-  // TODO Consider making it a member of the handle and trying to use friend
-  friend class handle<gltype<T>>;
-
-  T value() const { return m_value; }
-  operator T() const { return m_value; }
+  T id() const { return m_id; }
+  operator T() const { return m_id; }
 };
 
 // clang-format off
 // Macro for defining opengl id types
-#define POGGLES_GL_TYPE_CLASS(type_name, handle_name)               \
-class POGGLES_EXPORT type_name : public gltype<GLuint> \
+#define POGGLES_GL_TYPE_CLASS(type_name)               \
+class POGGLES_EXPORT type_name : public gltype<GLuint>                \
 {                                                      \
 public:                                                \
   type_name() = default;                               \
-  friend class handle<type_name>;                      \
-  type_name(type_name const & other): gltype<GLuint>(other.value()) {} \
+  friend class poggles::handle<type_name>;             \
 protected:                                             \
   type_name(GLuint id) :gltype<GLuint>(id) {}          \
 };
@@ -62,13 +60,8 @@ protected:                                             \
 // TODO - Improve error messages when trying to cast a GLuint to another type?
 // "This constructor is protected" might be good enough though
 
-POGGLES_GL_TYPE_CLASS(program_id, program_handle)
-POGGLES_GL_TYPE_CLASS(shader_id, shader_handle)
-POGGLES_GL_TYPE_CLASS(buffer_id, buffer_handle)
-POGGLES_GL_TYPE_CLASS(vertex_array_id, vertex_array_handle)
-POGGLES_GL_TYPE_CLASS(texture_id, texture_handle)
-
-struct GLEnum
-{
-  // TODO - Actually make this
-};
+POGGLES_GL_TYPE_CLASS(program_id)
+POGGLES_GL_TYPE_CLASS(shader_id)
+POGGLES_GL_TYPE_CLASS(buffer_id)
+POGGLES_GL_TYPE_CLASS(vertex_array_id)
+POGGLES_GL_TYPE_CLASS(texture_id)
