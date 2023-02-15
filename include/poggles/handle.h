@@ -9,7 +9,6 @@
 
 namespace poggles
 {
-
 // NOTES
 // - Since underlying types are GLuint there's no type safety
 // -
@@ -33,7 +32,7 @@ namespace poggles
 //    additional constructors
 
 template<typename T>
-class handle
+class handle : public T
 {
 protected:
   using handle_destructor = std::function<void(T)>;
@@ -49,7 +48,7 @@ public:
   virtual ~handle()
   {
     if (m_destructor) {
-      m_destructor(static_cast<T>(*this));
+      m_destructor(T(*this));
     }
   }
 
@@ -81,7 +80,7 @@ public:
   // Getters for the m_resource
   // explicit operator T() const { return m_value; }
   //[[nodiscard]] auto value() const -> T { return m_resource; }
-  auto id() const -> T { return static_cast<T&>(*this); }
+  auto id() const -> T { return *this; }
 
 private:
   handle_destructor m_destructor;
@@ -90,8 +89,9 @@ private:
 //------------------------------------------------------------------------------
 // OpenGL has various combinations of glCreate* and glDelete* function pairs
 //
-// The handle class allows us to use them in a generic way, but requires that we
-// call glCreate* and provide it with the corresponding glDelete* reference.
+// The handle class allows us to use them in a generic way, but requires that
+// we call glCreate* and provide it with the corresponding glDelete*
+// reference.
 //
 // These classes do that for the various known types that we plan to use.
 //------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ protected:
   gluint_handle(destructor&& _destructor, C&& _constructor, Args&&... args)
       : handle<T>(_destructor, _constructor, args...)
   {
-    if (value() == 0) {
+    if (this->value() == 0) {
       throw std::runtime_error("Invalid gluint_handle");
     }
   }

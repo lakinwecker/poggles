@@ -29,11 +29,13 @@ protected:
   }
 
 public:
-  gltype() {}
+  gltype()
+      : m_value(0)
+  {
+  }
 
   gltype(gltype<T>& other) = default;
-  gltype(gltype<T>&& other) = default;
-  ~gltype() = default;
+  gltype<T>& operator=(const gltype<T>& other) = default;
 
   // TODO Consider making it a member of the handle and trying to use friend
   friend class handle<gltype<T>>;
@@ -49,7 +51,8 @@ class POGGLES_EXPORT type_name : public gltype<GLuint> \
 {                                                      \
 public:                                                \
   type_name() = default;                               \
-  friend class handle_name;                            \
+  friend class handle<type_name>;                      \
+  type_name(type_name const & other): gltype<GLuint>(other.value()) {} \
 protected:                                             \
   type_name(GLuint id) :gltype<GLuint>(id) {}          \
 };
