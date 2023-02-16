@@ -48,8 +48,8 @@ template<typename T>
 class handle;
 }  // namespace poggles
 
-// clang-format off
 // Macro for defining opengl id types
+// clang-format off
 #define POGGLES_GL_TYPE_CLASS(type_name)               \
 class POGGLES_EXPORT type_name : public gltype<GLuint>                \
 {                                                      \

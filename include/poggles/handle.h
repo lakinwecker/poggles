@@ -21,7 +21,7 @@ namespace poggles
 template<typename T>
 class handle
 {
-protected:
+public:
   using handle_destructor = std::function<void(T)>;
 
   template<typename D, typename C, typename... Args>
@@ -31,7 +31,6 @@ protected:
   {
   }
 
-public:
   virtual ~handle()
   {
     if (m_destructor) {
@@ -63,7 +62,6 @@ public:
     return *this;
   }
 
-public:
   // Getters for the m_resource
   [[nodiscard]] auto value() const -> T { return m_resource; }
   explicit operator T() const { return m_resource; }
@@ -86,7 +84,7 @@ private:
 template<GLuintValued T>
 class gluint_handle : public handle<T>
 {
-protected:
+public:
   using destructor = std::function<void(GLuint)>;
 
   template<typename C, typename... Args>
