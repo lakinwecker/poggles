@@ -5,6 +5,7 @@
 #include <span>
 #include <vector>
 
+#include "poggles/gl_function.h"
 #include "poggles/handle.h"
 #include "poggles/poggles_export.hpp"
 
@@ -28,7 +29,7 @@ public:
          GLenum data_type);
 
   // Public interface
-  auto bind() -> void { glBindBuffer(m_target, m_buffer_handle.value()); }
+  auto bind() -> void { gl::bindBuffer(m_target, m_buffer_handle.value()); }
   explicit operator buffer_id() const { return m_buffer_handle.value(); }
   template<typename T>
   auto data(const std::span<T>& data, GLenum usage) -> void

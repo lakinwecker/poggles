@@ -36,10 +36,7 @@ public:
   auto recompile() -> bool;
   auto use() const -> void;
 
-  auto attach(shader_id id) -> void
-  {
-    glAttachShader(static_cast<program_id>(m_program_handle), id);
-  }
+  auto attach(shader_id id) -> void;
 
   explicit operator program_id() const
   {

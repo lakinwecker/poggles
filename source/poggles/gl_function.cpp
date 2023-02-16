@@ -15,4 +15,14 @@ void gl::bindVertexArray(vertex_array_id array)
   glBindVertexArray(array);
 }
 
+void gl::useProgram(program_id program)
+{
+  glUseProgram(program);
+}
+
+void gl::attachShader(program_id program, shader_id shader)
+{
+  glAttachShader(program, shader);
+}
+
 }  // namespace poggles

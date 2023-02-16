@@ -3,6 +3,8 @@
 
 #include "poggles/program.h"
 
+#include "poggles/gl_function.h"
+
 poggles::program::program(std::filesystem::path const& vertex_path,
                           std::filesystem::path const& fragment_path)
     : m_vertex(vertex_path, GL_VERTEX_SHADER)
@@ -30,9 +32,14 @@ auto poggles::program::recompile() -> bool
   }
 }
 
+auto poggles::program::attach(shader_id id) -> void
+{
+  gl::attachShader(static_cast<program_id>(m_program_handle), id);
+}
+
 void poggles::program::use() const
 {
-  glUseProgram(static_cast<program_id>(m_program_handle));
+  gl::useProgram(static_cast<program_id>(m_program_handle));
 }
 
 auto poggles::program::check_link_success(program_id identifier) -> bool

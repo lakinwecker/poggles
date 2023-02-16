@@ -26,6 +26,8 @@ protected:
   }
 
 public:
+  // TODO if this is extended to GLint's as well, sometimes -1 is the invalid
+  // case. Figure out how to handle that
   gltype()
       : m_id(0)
   {
@@ -67,4 +69,5 @@ POGGLES_GL_TYPE_CLASS(program_id)
 POGGLES_GL_TYPE_CLASS(shader_id)
 POGGLES_GL_TYPE_CLASS(buffer_id)
 POGGLES_GL_TYPE_CLASS(vertex_array_id)
+// TODO Connect texture format to texture ID
 POGGLES_GL_TYPE_CLASS(texture_id)

@@ -15,4 +15,8 @@ void POGGLES_EXPORT bindBuffer(GLenum target, buffer_id buffer);
 
 void POGGLES_EXPORT bindVertexArray(vertex_array_id array);
 
+void POGGLES_EXPORT useProgram(program_id program);
+
+void POGGLES_EXPORT attachShader(program_id program, shader_id shader);
+
 }  // namespace poggles::gl
