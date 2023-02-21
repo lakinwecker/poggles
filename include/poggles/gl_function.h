@@ -11,12 +11,12 @@
 
 namespace poggles::gl
 {
-void POGGLES_EXPORT bindBuffer(GLenum target, buffer_id buffer);
+auto POGGLES_EXPORT bindBuffer(GLenum target, buffer_id buffer) -> void;
 
-void POGGLES_EXPORT bindVertexArray(vertex_array_id array);
+auto POGGLES_EXPORT bindVertexArray(vertex_array_id array) -> void;
 
-void POGGLES_EXPORT useProgram(program_id program);
+auto POGGLES_EXPORT useProgram(program_id program) -> void;
 
-void POGGLES_EXPORT attachShader(program_id program, shader_id shader);
+auto POGGLES_EXPORT attachShader(program_id program, shader_id shader) -> void;
 
 }  // namespace poggles::gl
