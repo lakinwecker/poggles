@@ -20,7 +20,7 @@ protected:
   T m_id;
   // Protected constructor so it can't be created directly (Should only be
   // created using handle class)
-  gltype(T v)
+  explicit gltype(T v)
       : m_id(v)
   {
   }
@@ -33,7 +33,7 @@ public:
   {
   }
 
-  gltype(gltype<T>& other) = default;
+  gltype(gltype<T> const& other) = default;
 
   T id() const { return m_id; }
   operator T() const { return m_id; }
