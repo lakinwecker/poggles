@@ -27,14 +27,13 @@ auto poggles::check_link_success(program_id identifier) -> bool
     std::vector<char> log(static_cast<size_t>(log_length));
     glGetProgramInfoLog(identifier, log_length, nullptr, log.data());
 
-    // spdlog::error("[PROGRAM] linking {} + {}:\n{}", vertex.get_path(),
-    // fragment.get_path(), log.data());
+    std::cout << "[PROGRAM] linking failed: " << 
+       log.data();
 
     return false;
   }
 
-  // spdlog::info("[PROGRAM] successfully compiled and linked {} + {}",
-  // vertex.get_path(), fragment.get_path());
+  std::cout << "[PROGRAM] successfully compiled and linked program" << std::endl;;
   return true;
 }
 
@@ -47,9 +46,9 @@ auto poggles::compileProgram(
   bool status = true;
 
   for (auto [type, filename] : shaderFiles) {
-    shader_handle shader(type);
-    status &= compileShader(shader.value(), filename);
-    gl::attachShader(program, shader.value());
+    shaders.push_back(std::move(shader_handle(type)));
+    status &= compileShader(shaders.back().value(), filename);
+    gl::attachShader(program, shaders.back().value());
     // shader_handle should be good to go out of scope after being attached
   }
 
@@ -158,3 +157,16 @@ void poggles::program::set_mat4(
       GL_TRUE,
       value.data());
 }
+
+auto poggles::program::set_double(const std::string& name, double value) const -> void {
+  glUniform1d(glGetUniformLocation(m_program_handle.value(), name.c_str()), value);
+}
+
+auto poggles::program::set_dvec3(const std::string& name, std::span<const double, 3> value) const -> void {
+  glUniform3dv(glGetUniformLocation(m_program_handle.value(), name.c_str()), 1, value.data());
+}
+
+auto poggles::program::set_dmat4(const std::string& name, std::span<const double, 16> value) const -> void {
+  glUniformMatrix4dv(glGetUniformLocation(m_program_handle.value(), name.c_str()), 1, GL_TRUE, value.data());
+}
+

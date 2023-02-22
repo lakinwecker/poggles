@@ -56,6 +56,10 @@ public:
   void set_mat4(const std::string& name,
                 std::span<const float, 16> value) const;  // NOLINT
 
+  auto set_double(const std::string& name, double value) const -> void;
+  auto set_dvec3(const std::string& name, std::span<const double, 3> value) const -> void;
+  auto set_dmat4(const std::string& name, std::span<const double, 16> value) const -> void;
+
   template<size_t N>
   void set_float_array(const std::string& name,
                        int count,
