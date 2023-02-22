@@ -29,6 +29,7 @@ public:
 class POGGLES_EXPORT program
 {
 public:
+  program();
   program(std::filesystem::path const& vertex_path,
           std::filesystem::path const& fragment_path);
 
@@ -67,12 +68,17 @@ public:
   }
 
 private:
-  auto check_link_success(program_id identifier) -> bool;
-
   program_handle m_program_handle;
 
-  shader m_vertex;
-  shader m_fragment;
+  std::filesystem::path m_vertex_path;
+  std::filesystem::path m_fragment_path;
 };
+
+auto check_link_success(program_id identifier) -> bool;
+
+auto compileProgram(
+    program_id program,
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+    -> bool;
 
 }  // namespace poggles

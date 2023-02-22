@@ -53,4 +53,5 @@ private:
   GLenum m_target;
   buffer_handle m_buffer_handle;
 };
+
 }  // namespace poggles

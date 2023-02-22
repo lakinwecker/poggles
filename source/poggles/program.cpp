@@ -4,45 +4,18 @@
 #include "poggles/program.h"
 
 #include "poggles/gl_function.h"
-
-poggles::program::program(std::filesystem::path const& vertex_path,
-                          std::filesystem::path const& fragment_path)
-    : m_vertex(vertex_path, GL_VERTEX_SHADER)
-    , m_fragment(fragment_path, GL_FRAGMENT_SHADER)
+/*
+poggles::program::program(std::initializer_list<shader_id> shaders)
 {
-  attach(static_cast<shader_id>(m_vertex));
-  attach(static_cast<shader_id>(m_fragment));
+  for (auto shader : shaders) {
+    attach(shader);
+  }
+
   glLinkProgram(static_cast<program_id>(m_program_handle));
-
-  if (!check_link_success(static_cast<program_id>(m_program_handle))) {
-    throw poggles::shader_link_exception("Shaders did not link.");
-  }
 }
+*/
 
-auto poggles::program::recompile() -> bool
-{
-  try {
-    // Try to create a new program
-    poggles::program new_program(m_vertex.get_path(), m_fragment.get_path());
-    *this = std::move(new_program);
-    return true;
-  } catch (poggles::shader_compile_exception const&) {
-    // spdlog::warn("[PROGRAM] falling back to previous version of shaders");
-    return false;
-  }
-}
-
-auto poggles::program::attach(shader_id id) -> void
-{
-  gl::attachShader(static_cast<program_id>(m_program_handle), id);
-}
-
-void poggles::program::use() const
-{
-  gl::useProgram(static_cast<program_id>(m_program_handle));
-}
-
-auto poggles::program::check_link_success(program_id identifier) -> bool
+auto poggles::check_link_success(program_id identifier) -> bool
 {
   GLint success = -1;
 
@@ -63,6 +36,68 @@ auto poggles::program::check_link_success(program_id identifier) -> bool
   // spdlog::info("[PROGRAM] successfully compiled and linked {} + {}",
   // vertex.get_path(), fragment.get_path());
   return true;
+}
+
+auto poggles::compileProgram(
+    program_id program,
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+    -> bool
+{
+  std::vector<shader_handle> shaders;
+  bool status = true;
+
+  for (auto [type, filename] : shaderFiles) {
+    shader_handle shader(type);
+    status &= compileShader(shader.value(), filename);
+    gl::attachShader(program, shader.value());
+    // shader_handle should be good to go out of scope after being attached
+  }
+
+  glLinkProgram(program);
+
+  return status & poggles::check_link_success(program);
+}
+
+poggles::program::program() {}
+
+poggles::program::program(std::filesystem::path const& vertex_path,
+                          std::filesystem::path const& fragment_path)
+    : m_vertex_path(vertex_path)
+    , m_fragment_path(fragment_path)
+{
+  shader_handle vertex(GL_VERTEX_SHADER);
+  shader_handle fragment(GL_FRAGMENT_SHADER);
+
+  attach(static_cast<shader_id>(vertex));
+  attach(static_cast<shader_id>(fragment));
+  glLinkProgram(static_cast<program_id>(m_program_handle));
+
+  if (!check_link_success(static_cast<program_id>(m_program_handle))) {
+    throw poggles::shader_link_exception("Shaders did not link.");
+  }
+}
+
+auto poggles::program::recompile() -> bool
+{
+  try {
+    // Try to create a new program
+    poggles::program new_program(m_vertex_path, m_fragment_path);
+    *this = std::move(new_program);
+    return true;
+  } catch (poggles::shader_compile_exception const&) {
+    // spdlog::warn("[PROGRAM] falling back to previous version of shaders");
+    return false;
+  }
+}
+
+auto poggles::program::attach(shader_id id) -> void
+{
+  gl::attachShader(static_cast<program_id>(m_program_handle), id);
+}
+
+void poggles::program::use() const
+{
+  gl::useProgram(static_cast<program_id>(m_program_handle));
 }
 
 void poggles::program::set_bool(const std::string& name, bool value) const

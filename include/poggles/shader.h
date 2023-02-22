@@ -26,6 +26,8 @@ public:
   }
 };
 
+auto compileShader(shader_id shader, std::filesystem::path path) -> bool;
+
 class POGGLES_EXPORT shader
 {
 public:
