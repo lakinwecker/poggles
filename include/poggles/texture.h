@@ -13,12 +13,16 @@ class POGGLES_EXPORT texture
 {
 public:
   explicit texture(GLenum target);
-  explicit operator GLuint() const { return static_cast<GLuint>(m_texture_id); }
+  explicit operator GLuint() const
+  {
+    return static_cast<GLuint>(m_texture_handle.value());
+  }
   static void activate(GLenum texture_num) { glActiveTexture(texture_num); }
   void bind(GLenum texture_num = GL_TEXTURE0) const
   {
     activate(texture_num);
-    glBindTexture(m_original_target, static_cast<GLuint>(m_texture_id));
+    glBindTexture(m_original_target,
+                  static_cast<GLuint>(m_texture_handle.value()));
   }
 
   // TODO more general form for these functions
@@ -38,6 +42,6 @@ public:
 
 private:
   GLenum m_original_target;
-  texture_id m_texture_id;
+  texture_handle m_texture_handle;
 };
 }  // namespace poggles

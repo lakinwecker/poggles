@@ -8,7 +8,7 @@
 #include "poggles/shader.h"
 
 poggles::shader::shader(std::filesystem::path path, GLenum type)
-    : m_shader_id(type)
+    : m_shader_handle(type)
     , m_type(type)
     , m_path(std::move(path))
 {
@@ -41,41 +41,50 @@ auto poggles::shader::compile() -> bool
   } catch (std::ifstream::failure const&) {
     std::string error_msg;
     // TODO: get this working generally
-    //#ifdef DGGS_VISUALSTUDIO
+    // #ifdef DGGS_VISUALSTUDIO
     // error_msg.resize(94); //
     // https://developercommunity.visualstudio.com/t/strerrorlen-s-is-not-supported/160287
     // strerror_s(error_msg.data(), error_msg.size(), errno);
-    //#else
-    //#endif
+    // #else
+    // #endif
 
     error_msg = strerror(errno);
-    std::cerr << "[SHADER] reading " << m_path.string() << ":\n" <<  error_msg << std::endl;
+    std::cerr << "[SHADER] reading " << m_path.string() << ":\n"
+              << error_msg << std::endl;
     return false;
   }
 
   GLchar const* source_code = source_string.c_str();
 
   // compile shader
-  glShaderSource(static_cast<GLuint>(m_shader_id), 1, &source_code, nullptr);
-  glCompileShader(static_cast<GLuint>(m_shader_id));
+  glShaderSource(
+      static_cast<GLuint>(m_shader_handle.value()), 1, &source_code, nullptr);
+  glCompileShader(static_cast<GLuint>(m_shader_handle.value()));
 
   // Always log the info, just change the severity
   // based on whether it's an error or not
   GLint log_length = -1;
-  glGetShaderiv(
-      static_cast<GLuint>(m_shader_id), GL_INFO_LOG_LENGTH, &log_length);
+  glGetShaderiv(static_cast<GLuint>(m_shader_handle.value()),
+                GL_INFO_LOG_LENGTH,
+                &log_length);
   std::string log;
   log.resize(static_cast<size_t>(log_length));
-  glGetShaderInfoLog(
-      static_cast<GLuint>(m_shader_id), log_length, nullptr, log.data());
+  glGetShaderInfoLog(static_cast<GLuint>(m_shader_handle.value()),
+                     log_length,
+                     nullptr,
+                     log.data());
 
   // check for errors
   GLint success = -1;
-  glGetShaderiv(static_cast<GLuint>(m_shader_id), GL_COMPILE_STATUS, &success);
+  glGetShaderiv(static_cast<GLuint>(m_shader_handle.value()),
+                GL_COMPILE_STATUS,
+                &success);
   if (success == 0) {
-    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n" << log << std::endl;
+    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n"
+              << log << std::endl;
   } else {
-    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n" << log << std::endl;
+    std::cerr << "[SHADER] compilation log " << m_path.string() << ":\n"
+              << log << std::endl;
   }
   return success != 0;
 }

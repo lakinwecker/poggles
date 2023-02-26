@@ -36,12 +36,12 @@ public:
   auto recompile() -> bool;
   auto use() const -> void;
 
-  auto attach(GLuint shader_id) -> void
-  {
-    glAttachShader(static_cast<GLuint>(m_program_id), shader_id);
-  }
+  auto attach(shader_id id) -> void;
 
-  explicit operator GLuint() const { return static_cast<GLuint>(m_program_id); }
+  explicit operator program_id() const
+  {
+    return static_cast<program_id>(m_program_handle);
+  }
 
   auto set_bool(const std::string& name, bool value) const -> void;
   auto set_int(const std::string& name, int value) const -> void;
@@ -52,23 +52,24 @@ public:
 
   void set_vec3(const std::string& name, std::span<const float, 3> value) const;
   void set_vec4(const std::string& name, std::span<const float, 4> value) const;
-  void set_mat4(const std::string& name, std::span<const float, 16> value) const; // NOLINT
+  void set_mat4(const std::string& name,
+                std::span<const float, 16> value) const;  // NOLINT
 
   template<size_t N>
   void set_float_array(const std::string& name,
                        int count,
                        std::array<float, N> array) const
   {
-    glUniform1fv(
-        glGetUniformLocation(static_cast<GLuint>(m_program_id), name.data()),
-        count,
-        array.data());
+    glUniform1fv(glGetUniformLocation(static_cast<program_id>(m_program_handle),
+                                      name.data()),
+                 count,
+                 array.data());
   }
 
 private:
-  auto check_link_success(GLuint identifier) -> bool;
+  auto check_link_success(program_id identifier) -> bool;
 
-  program_id m_program_id;
+  program_handle m_program_handle;
 
   shader m_vertex;
   shader m_fragment;

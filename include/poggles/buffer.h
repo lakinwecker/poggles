@@ -5,6 +5,7 @@
 #include <span>
 #include <vector>
 
+#include "poggles/gl_function.h"
 #include "poggles/handle.h"
 #include "poggles/poggles_export.hpp"
 
@@ -28,17 +29,16 @@ public:
          GLenum data_type);
 
   // Public interface
-  auto bind() -> void
-  {
-    glBindBuffer(m_target, static_cast<GLuint>(m_buffer_id));
-  }
-  explicit operator GLuint() const { return static_cast<GLuint>(m_buffer_id); }
+  auto bind() -> void { gl::bindBuffer(m_target, m_buffer_handle.value()); }
+  explicit operator buffer_id() const { return m_buffer_handle.value(); }
   template<typename T>
   auto data(const std::span<T>& data, GLenum usage) -> void
   {
     bind();
-    glBufferData(
-        m_target, static_cast<GLsizei>(sizeof(T) * data.size()), data.data(), usage);
+    glBufferData(m_target,
+                 static_cast<GLsizei>(sizeof(T) * data.size()),
+                 data.data(),
+                 usage);
   }
   template<typename Wrapper>
   auto data(Wrapper const& matrix, GLenum usage) -> void
@@ -51,6 +51,6 @@ public:
 
 private:
   GLenum m_target;
-  buffer_id m_buffer_id;
+  buffer_handle m_buffer_handle;
 };
 }  // namespace poggles

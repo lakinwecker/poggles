@@ -3,11 +3,12 @@
 #include <stdexcept>
 
 #include <glad/glad.h>
+
+#include "poggles/gltypes.h"
 #include "poggles/poggles_export.hpp"
 
 namespace poggles
 {
-
 //------------------------------------------------------------------------------
 // An RAII wrapper around a resource that is not a pointer.
 //
@@ -62,8 +63,8 @@ public:
   }
 
   // Getters for the m_resource
-  explicit operator T() const { return m_resource; }
   [[nodiscard]] auto value() const -> T { return m_resource; }
+  explicit operator T() const { return m_resource; }
 
 private:
   T m_resource;
@@ -73,51 +74,56 @@ private:
 //------------------------------------------------------------------------------
 // OpenGL has various combinations of glCreate* and glDelete* function pairs
 //
-// The handle class allows us to use them in a generic way, but requires that we
-// call glCreate* and provide it with the corresponding glDelete* reference.
+// The handle class allows us to use them in a generic way, but requires that
+// we call glCreate* and provide it with the corresponding glDelete*
+// reference.
 //
 // These classes do that for the various known types that we plan to use.
 //------------------------------------------------------------------------------
 
-class POGGLES_EXPORT gluint_handle : public handle<GLuint>
+template<GLuintValued T>
+class gluint_handle : public handle<T>
 {
 public:
   using destructor = std::function<void(GLuint)>;
 
   template<typename C, typename... Args>
-  gluint_handle(destructor&& destructor, C&& constructor, Args&&... args)
-      : handle(destructor, constructor, args...)
+  gluint_handle(destructor&& _destructor, C&& _constructor, Args&&... args)
+      : handle<T>(_destructor, _constructor, args...)
   {
-    if (value() == 0) {
+    if (this->value().id() == 0) {
       throw std::runtime_error("Invalid gluint_handle");
     }
   }
+
+  explicit operator GLuint() const { return this->value().id(); }
 };
 
-class POGGLES_EXPORT shader_id : public gluint_handle
+class shader_handle : public gluint_handle<shader_id>
 {
 public:
-  explicit shader_id(GLenum type)
-      : gluint_handle(glDeleteShader, glCreateShader, type)
+  explicit shader_handle(GLenum type)
+      : gluint_handle<shader_id>(glDeleteShader, glCreateShader, type)
   {
   }
 };
 
-class POGGLES_EXPORT program_id : public gluint_handle
+class program_handle : public gluint_handle<program_id>
 {
 public:
-  program_id()
-      : gluint_handle(glDeleteProgram, glCreateProgram)
+  explicit program_handle()
+      : gluint_handle<program_id>(glDeleteProgram, glCreateProgram)
   {
   }
 };
 
-class POGGLES_EXPORT gen_delete_handle : public gluint_handle
+template<typename T>
+class gen_delete_handle : public gluint_handle<T>
 {
 public:
   template<typename D, typename G>
   gen_delete_handle(D&& delete_func, G&& gen_func)
-      : gluint_handle(
+      : gluint_handle<T>(
           // Destructor
           [delete_func](GLuint other) { delete_func(1, &other); },
 
@@ -132,29 +138,30 @@ public:
   }
 };
 
-class POGGLES_EXPORT buffer_id : public gen_delete_handle
+class buffer_handle : public gen_delete_handle<buffer_id>
 {
 public:
-  buffer_id()
-      : gen_delete_handle(glDeleteBuffers, glGenBuffers)
+  buffer_handle()
+      : gen_delete_handle<buffer_id>(glDeleteBuffers, glGenBuffers)
   {
   }
 };
 
-class POGGLES_EXPORT vertex_array_id : public gen_delete_handle
+class vertex_array_handle : public gen_delete_handle<vertex_array_id>
 {
 public:
-  vertex_array_id()
-      : gen_delete_handle(glDeleteVertexArrays, glGenVertexArrays)
+  vertex_array_handle()
+      : gen_delete_handle<vertex_array_id>(glDeleteVertexArrays,
+                                           glGenVertexArrays)
   {
   }
 };
 
-class POGGLES_EXPORT texture_id : public gen_delete_handle
+class texture_handle : public gen_delete_handle<texture_id>
 {
 public:
-  texture_id()
-      : gen_delete_handle(glDeleteTextures, glGenTextures)
+  texture_handle()
+      : gen_delete_handle<texture_id>(glDeleteTextures, glGenTextures)
   {
   }
 };

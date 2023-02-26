@@ -1,5 +1,6 @@
 #pragma once
 
+#include "poggles/gl_function.h"
 #include "poggles/handle.h"
 #include "poggles/poggles_export.hpp"
 
@@ -12,14 +13,14 @@ public:
   vertex_array();
 
   // Public interface
-  void bind() const { glBindVertexArray(static_cast<GLuint>(m_array_id)); }
-  explicit operator GLuint() const { return static_cast<GLuint>(m_array_id); }
+  void bind() const { gl::bindVertexArray(m_array_handle.value()); }
+  explicit operator vertex_array_id() const { return m_array_handle.value(); }
   // TODO: my linting tool says that unbind() can be static. It's right, it can
   // be static.
   //       My question is: Should it be static?
-  void unbind() const { glBindVertexArray(0); }
+  void unbind() const { gl::bindVertexArray({}); }
 
 private:
-  vertex_array_id m_array_id;
+  vertex_array_handle m_array_handle;
 };
 }  // namespace poggles
