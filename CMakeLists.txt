@@ -65,10 +65,12 @@ target_include_directories(
 target_compile_features(poggles_poggles PUBLIC cxx_std_20)
 
 find_package(glad REQUIRED)
+find_package(stb REQUIRED)
 find_package(opengl_system REQUIRED)
 target_link_libraries(
     poggles_poggles PRIVATE
     glad::glad
+    stb::stb
     opengl::opengl
 )
 

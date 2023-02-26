@@ -22,6 +22,7 @@ class Recipe(ConanFile):
     def requirements(self):
         requirements = [
             "glad/0.1.36",
+            "stb/cci.20220909",
             "opengl/system",
         ]
         for r in requirements:
