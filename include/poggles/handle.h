@@ -25,9 +25,9 @@ public:
   using handle_destructor = std::function<void(T)>;
 
   template<typename D, typename C, typename... Args>
-  handle(D&& inDestructor, C&& inConstructor, Args&&... args)
-      : m_resource(inConstructor(std::forward<Args>(args)...))
-      , m_destructor(inDestructor)
+  handle(D&& _destructor, C&& _constructor, Args&&... args)
+      : m_resource(_constructor(std::forward<Args>(args)...))
+      , m_destructor(_destructor)
   {
   }
 
