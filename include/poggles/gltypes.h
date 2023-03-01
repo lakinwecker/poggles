@@ -6,12 +6,12 @@
 
 #include "poggles/poggles_export.hpp"
 
+// clang-format off
 template<typename T>
 concept GLuintValued = requires(T a) {
-                         {
-                           a.id()
-                           } -> std::convertible_to<GLuint>;
-                       };
+  { a.id() } -> std::convertible_to<GLuint>;
+};
+// clang-format on
 
 template<typename T>
 class gltype
