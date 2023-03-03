@@ -4,7 +4,7 @@
 
 #include "poggles/texture.h"
 
-#include "poggles/stb_image.h"
+#include "stb_image.h"
 
 poggles::texture::texture(GLenum target)
     : m_original_target(target)
@@ -37,7 +37,7 @@ void poggles::texture::load(GLenum target,
                             int channels,
                             GLint level)
 {
-  GLint format = GL_RGB;
+  GLenum format = GL_RGB;
   if (channels == 1) {
     format = GL_RED;
   } else if (channels == 2) {
@@ -71,7 +71,7 @@ void poggles::texture::load(GLenum target,
                             int channels,
                             GLint level)
 {
-  GLint format = GL_RGB;
+  GLenum format = GL_RGB;
   if (channels == 1) {
     format = GL_RED;
   } else if (channels == 2) {
@@ -81,6 +81,14 @@ void poggles::texture::load(GLenum target,
   } else if (channels == 4) {
     format = GL_RGBA;
   }
-  glTexImage2D(target, level, format, width, height, 0, format, GL_FLOAT, data);
+  glTexImage2D(target,
+               level,
+               static_cast<GLint>(format),
+               width,
+               height,
+               0,
+               format,
+               GL_FLOAT,
+               data);
   // glGenerateMipmap(target);
 }

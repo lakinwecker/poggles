@@ -13,7 +13,8 @@ poggles::buffer::buffer(GLenum target,
     : m_target(target)
 {
   gl::bindBuffer(target, static_cast<buffer_id>(m_buffer_handle));
-  glVertexAttribPointer(index, size, data_type, GL_FALSE, 0, (void*)nullptr);
+  glVertexAttribPointer(
+      index, size, data_type, GL_FALSE, 0, static_cast<void*>(nullptr));
   glEnableVertexAttribArray(index);
 }
 
@@ -35,7 +36,7 @@ poggles::buffer::buffer(GLenum target,
                           data_type,
                           GL_FALSE,
                           stride,
-                          (void*)(offset));
+                          reinterpret_cast<void*>(offset));
     glEnableVertexAttribArray(index);
     glVertexAttribDivisor(index, instances_per_advancement);
   }

@@ -27,13 +27,14 @@ auto poggles::check_link_success(program_id identifier) -> bool
     std::vector<char> log(static_cast<size_t>(log_length));
     glGetProgramInfoLog(identifier, log_length, nullptr, log.data());
 
-    std::cout << "[PROGRAM] linking failed: " << 
-       log.data();
+    std::cout << "[PROGRAM] linking failed: " << log.data();
 
     return false;
   }
 
-  std::cout << "[PROGRAM] successfully compiled and linked program" << std::endl;;
+  std::cout << "[PROGRAM] successfully compiled and linked program"
+            << std::endl;
+  ;
   return true;
 }
 
@@ -158,15 +159,28 @@ void poggles::program::set_mat4(
       value.data());
 }
 
-auto poggles::program::set_double(const std::string& name, double value) const -> void {
-  glUniform1d(glGetUniformLocation(m_program_handle.value(), name.c_str()), value);
+auto poggles::program::set_double(const std::string& name, double value) const
+    -> void
+{
+  glUniform1d(glGetUniformLocation(m_program_handle.value(), name.c_str()),
+              value);
 }
 
-auto poggles::program::set_dvec3(const std::string& name, std::span<const double, 3> value) const -> void {
-  glUniform3dv(glGetUniformLocation(m_program_handle.value(), name.c_str()), 1, value.data());
+auto poggles::program::set_dvec3(const std::string& name,
+                                 std::span<const double, 3> value) const -> void
+{
+  glUniform3dv(glGetUniformLocation(m_program_handle.value(), name.c_str()),
+               1,
+               value.data());
 }
 
-auto poggles::program::set_dmat4(const std::string& name, std::span<const double, 16> value) const -> void {
-  glUniformMatrix4dv(glGetUniformLocation(m_program_handle.value(), name.c_str()), 1, GL_TRUE, value.data());
+auto poggles::program::set_dmat4(const std::string& name,
+                                 std::span<const double, 16> value) const
+    -> void
+{
+  glUniformMatrix4dv(
+      glGetUniformLocation(m_program_handle.value(), name.c_str()),
+      1,
+      GL_TRUE,
+      value.data());
 }
-

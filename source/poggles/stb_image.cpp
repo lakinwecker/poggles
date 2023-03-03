@@ -3,5 +3,5 @@
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "poggles/stb_image.h"
+#include "stb_image.h"
 // NOLINTEND
