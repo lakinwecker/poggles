@@ -4,16 +4,6 @@
 #include "poggles/program.h"
 
 #include "poggles/gl_function.h"
-/*
-poggles::program::program(std::initializer_list<shader_id> shaders)
-{
-  for (auto shader : shaders) {
-    attach(shader);
-  }
-
-  glLinkProgram(static_cast<program_id>(m_program_handle));
-}
-*/
 
 auto poggles::check_link_success(program_id identifier) -> bool
 {
