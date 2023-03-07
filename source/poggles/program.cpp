@@ -5,7 +5,7 @@
 
 #include "poggles/gl_function.h"
 
-auto poggles::check_link_success(program_id identifier) -> bool
+auto poggles::checkLinkSuccess(program_id identifier) -> bool
 {
   GLint success = -1;
 
@@ -24,7 +24,7 @@ auto poggles::check_link_success(program_id identifier) -> bool
 
   std::cout << "[PROGRAM] successfully compiled and linked program"
             << std::endl;
-  ;
+
   return true;
 }
 
@@ -33,22 +33,27 @@ auto poggles::compileProgram(
     std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
     -> bool
 {
-  std::vector<shader_handle> shaders;
   bool status = true;
 
   for (auto [type, filename] : shaderFiles) {
-    shaders.push_back(std::move(shader_handle(type)));
-    status &= compileShader(shaders.back().value(), filename);
-    gl::attachShader(program, shaders.back().value());
-    // shader_handle should be good to go out of scope after being attached
+    shader_handle shader(type);
+    status &= compileShader(shader.value(), filename);
+    gl::attachShader(program, shader.value());
+    // shader_handle should be safe to go out of scope after being attached
   }
 
   glLinkProgram(program);
 
-  return status & poggles::check_link_success(program);
+  return status & poggles::checkLinkSuccess(program);
 }
 
-poggles::program::program() {}
+poggles::program::program(
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+{
+  if (!compileProgram(m_program_handle.value(), shaderFiles)) {
+    throw poggles::shader_link_exception("Shaders did not link.");
+  }
+}
 
 poggles::program::program(std::filesystem::path const& vertex_path,
                           std::filesystem::path const& fragment_path)
@@ -62,7 +67,7 @@ poggles::program::program(std::filesystem::path const& vertex_path,
   attach(static_cast<shader_id>(fragment));
   glLinkProgram(static_cast<program_id>(m_program_handle));
 
-  if (!check_link_success(static_cast<program_id>(m_program_handle))) {
+  if (!checkLinkSuccess(static_cast<program_id>(m_program_handle))) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }

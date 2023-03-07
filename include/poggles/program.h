@@ -29,7 +29,8 @@ public:
 class POGGLES_EXPORT program
 {
 public:
-  program();
+  program(
+      std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles);
   program(std::filesystem::path const& vertex_path,
           std::filesystem::path const& fragment_path);
 
@@ -80,7 +81,7 @@ private:
   std::filesystem::path m_fragment_path;
 };
 
-auto check_link_success(program_id identifier) -> bool;
+auto checkLinkSuccess(program_id identifier) -> bool;
 
 auto compileProgram(
     program_id program,
