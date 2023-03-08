@@ -3,6 +3,7 @@
 #include <string>
 
 #include "poggles/texture.h"
+
 #include "stb_image.h"
 
 poggles::texture::texture(GLenum target)
@@ -46,6 +47,12 @@ void poggles::texture::load(GLenum target,
   } else if (channels == 4) {
     format = GL_RGBA;
   }
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
   glTexImage2D(target,
                level,
                static_cast<GLint>(format),
@@ -74,6 +81,14 @@ void poggles::texture::load(GLenum target,
   } else if (channels == 4) {
     format = GL_RGBA;
   }
-  glTexImage2D(target, level, static_cast<GLint>(format), width, height, 0, format, GL_FLOAT, data);
+  glTexImage2D(target,
+               level,
+               static_cast<GLint>(format),
+               width,
+               height,
+               0,
+               format,
+               GL_FLOAT,
+               data);
   // glGenerateMipmap(target);
 }

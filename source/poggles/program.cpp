@@ -5,16 +5,69 @@
 
 #include "poggles/gl_function.h"
 
+auto poggles::checkLinkSuccess(program_id identifier) -> bool
+{
+  GLint success = -1;
+
+  // check for link errors
+  glGetProgramiv(identifier, GL_LINK_STATUS, &success);
+  if (success == 0) {
+    GLint log_length = -1;
+    glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &log_length);
+    std::vector<char> log(static_cast<size_t>(log_length));
+    glGetProgramInfoLog(identifier, log_length, nullptr, log.data());
+
+    std::cout << "[PROGRAM] linking failed: " << log.data();
+
+    return false;
+  }
+
+  std::cout << "[PROGRAM] successfully compiled and linked program"
+            << std::endl;
+
+  return true;
+}
+
+auto poggles::compileProgram(
+    program_id program,
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+    -> bool
+{
+  bool status = true;
+
+  for (auto [type, filename] : shaderFiles) {
+    shader_handle shader(type);
+    status &= compileShader(shader.value(), filename);
+    gl::attachShader(program, shader.value());
+    // shader_handle should be safe to go out of scope after being attached
+  }
+
+  glLinkProgram(program);
+
+  return status & poggles::checkLinkSuccess(program);
+}
+
+poggles::program::program(
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+{
+  if (!compileProgram(m_program_handle.value(), shaderFiles)) {
+    throw poggles::shader_link_exception("Shaders did not link.");
+  }
+}
+
 poggles::program::program(std::filesystem::path const& vertex_path,
                           std::filesystem::path const& fragment_path)
-    : m_vertex(vertex_path, GL_VERTEX_SHADER)
-    , m_fragment(fragment_path, GL_FRAGMENT_SHADER)
+    : m_vertex_path(vertex_path)
+    , m_fragment_path(fragment_path)
 {
-  attach(static_cast<shader_id>(m_vertex));
-  attach(static_cast<shader_id>(m_fragment));
+  shader_handle vertex(GL_VERTEX_SHADER);
+  shader_handle fragment(GL_FRAGMENT_SHADER);
+
+  attach(static_cast<shader_id>(vertex));
+  attach(static_cast<shader_id>(fragment));
   glLinkProgram(static_cast<program_id>(m_program_handle));
 
-  if (!check_link_success(static_cast<program_id>(m_program_handle))) {
+  if (!checkLinkSuccess(static_cast<program_id>(m_program_handle))) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }
@@ -23,7 +76,7 @@ auto poggles::program::recompile() -> bool
 {
   try {
     // Try to create a new program
-    poggles::program new_program(m_vertex.get_path(), m_fragment.get_path());
+    poggles::program new_program(m_vertex_path, m_fragment_path);
     *this = std::move(new_program);
     return true;
   } catch (poggles::shader_compile_exception const&) {
@@ -40,29 +93,6 @@ auto poggles::program::attach(shader_id id) -> void
 void poggles::program::use() const
 {
   gl::useProgram(static_cast<program_id>(m_program_handle));
-}
-
-auto poggles::program::check_link_success(program_id identifier) -> bool
-{
-  GLint success = -1;
-
-  // check for link errors
-  glGetProgramiv(identifier, GL_LINK_STATUS, &success);
-  if (success == 0) {
-    GLint log_length = -1;
-    glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &log_length);
-    std::vector<char> log(static_cast<size_t>(log_length));
-    glGetProgramInfoLog(identifier, log_length, nullptr, log.data());
-
-    // spdlog::error("[PROGRAM] linking {} + {}:\n{}", vertex.get_path(),
-    // fragment.get_path(), log.data());
-
-    return false;
-  }
-
-  // spdlog::info("[PROGRAM] successfully compiled and linked {} + {}",
-  // vertex.get_path(), fragment.get_path());
-  return true;
 }
 
 void poggles::program::set_bool(const std::string& name, bool value) const
@@ -119,6 +149,32 @@ void poggles::program::set_mat4(
   glUniformMatrix4fv(
       glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()),
                            name.c_str()),
+      1,
+      GL_TRUE,
+      value.data());
+}
+
+auto poggles::program::set_double(const std::string& name, double value) const
+    -> void
+{
+  glUniform1d(glGetUniformLocation(m_program_handle.value(), name.c_str()),
+              value);
+}
+
+auto poggles::program::set_dvec3(const std::string& name,
+                                 std::span<const double, 3> value) const -> void
+{
+  glUniform3dv(glGetUniformLocation(m_program_handle.value(), name.c_str()),
+               1,
+               value.data());
+}
+
+auto poggles::program::set_dmat4(const std::string& name,
+                                 std::span<const double, 16> value) const
+    -> void
+{
+  glUniformMatrix4dv(
+      glGetUniformLocation(m_program_handle.value(), name.c_str()),
       1,
       GL_TRUE,
       value.data());

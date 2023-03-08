@@ -29,6 +29,8 @@ public:
 class POGGLES_EXPORT program
 {
 public:
+  program(
+      std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles);
   program(std::filesystem::path const& vertex_path,
           std::filesystem::path const& fragment_path);
 
@@ -55,6 +57,12 @@ public:
   void set_mat4(const std::string& name,
                 std::span<const float, 16> value) const;  // NOLINT
 
+  auto set_double(const std::string& name, double value) const -> void;
+  auto set_dvec3(const std::string& name,
+                 std::span<const double, 3> value) const -> void;
+  auto set_dmat4(const std::string& name,
+                 std::span<const double, 16> value) const -> void;
+
   template<size_t N>
   void set_float_array(const std::string& name,
                        int count,
@@ -67,12 +75,17 @@ public:
   }
 
 private:
-  auto check_link_success(program_id identifier) -> bool;
-
   program_handle m_program_handle;
 
-  shader m_vertex;
-  shader m_fragment;
+  std::filesystem::path m_vertex_path;
+  std::filesystem::path m_fragment_path;
 };
+
+auto checkLinkSuccess(program_id identifier) -> bool;
+
+auto compileProgram(
+    program_id program,
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+    -> bool;
 
 }  // namespace poggles
