@@ -12,6 +12,13 @@
 namespace poggles
 {
 
+// TODO Buffer class sets up vertex attribute pointer, but the attribute pointer
+// is associated with the vertex array instead. If there isn't a vertex array
+// bound (or the correct one bound) when the constructor is called these won't
+// provide intended behavior.
+// Additionally, it is valid to have different vertex attribute pointers
+// associated with the same buffer (ie: A buffer used by multiple shader
+// programs but using different attribute indices for each)
 class POGGLES_EXPORT buffer
 {
 public:
@@ -29,7 +36,10 @@ public:
          GLenum data_type);
 
   // Public interface
-  auto bind() -> void { gl::bindBuffer(m_target, m_buffer_handle.value()); }
+  auto bind() const -> void
+  {
+    gl::bindBuffer(m_target, m_buffer_handle.value());
+  }
   explicit operator buffer_id() const { return m_buffer_handle.value(); }
   template<typename T>
   auto data(const std::span<T>& data, GLenum usage) -> void
