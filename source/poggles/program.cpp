@@ -60,14 +60,10 @@ poggles::program::program(std::filesystem::path const& vertex_path,
     : m_vertex_path(vertex_path)
     , m_fragment_path(fragment_path)
 {
-  shader_handle vertex(GL_VERTEX_SHADER);
-  shader_handle fragment(GL_FRAGMENT_SHADER);
-
-  attach(static_cast<shader_id>(vertex));
-  attach(static_cast<shader_id>(fragment));
-  glLinkProgram(static_cast<program_id>(m_program_handle));
-
-  if (!checkLinkSuccess(static_cast<program_id>(m_program_handle))) {
+  if (!compileProgram(m_program_handle.value(),
+                      {{GL_VERTEX_SHADER, vertex_path.string()},
+                       {GL_FRAGMENT_SHADER, fragment_path.string()}}))
+  {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }
