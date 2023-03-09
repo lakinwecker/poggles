@@ -18,6 +18,7 @@ poggles::buffer::buffer(GLenum target,
     : m_target(target)
 {
   gl::bindBuffer(target, static_cast<buffer_id>(m_buffer_handle));
+<<<<<<< HEAD
   if (data_type == GL_DOUBLE) {
     glVertexAttribLPointer(
         index, size, data_type, 0, static_cast<void*>(nullptr));
@@ -25,6 +26,10 @@ poggles::buffer::buffer(GLenum target,
     glVertexAttribPointer(
         index, size, data_type, GL_FALSE, 0, static_cast<void*>(nullptr));
   }
+=======
+  glVertexAttribPointer(
+      index, size, data_type, GL_FALSE, 0, static_cast<void*>(nullptr));
+>>>>>>> upstream/main
   glEnableVertexAttribArray(index);
 }
 
