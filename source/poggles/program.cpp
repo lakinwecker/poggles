@@ -122,6 +122,16 @@ void poggles::program::set_float(const std::string& name, float value) const
                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
               value);
 }
+
+void poggles::program::set_vec2(const std::string& name,
+                                std::span<const float, 2> value) const
+{
+  glUniform2fv(glGetUniformLocation(
+                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
+               1,
+               value.data());
+}
+
 void poggles::program::set_vec3(const std::string& name,
                                 std::span<const float, 3> value) const
 {
