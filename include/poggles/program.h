@@ -64,6 +64,10 @@ public:
   auto set_dmat4(const std::string& name,
                  std::span<const double, 16> value) const -> void;
 
+  void set_uvec2(const std::string& name, std::span<const std::uint32_t, 2> value) const;
+  void set_uvec3(const std::string& name, std::span<const std::uint32_t, 3> value) const;
+  void set_uvec4(const std::string& name, std::span<const std::uint32_t, 4> value) const;
+
   template<size_t N>
   void set_float_array(const std::string& name,
                        int count,

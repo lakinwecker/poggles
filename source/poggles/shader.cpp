@@ -62,10 +62,7 @@ auto poggles::compileShader(shader_id shader, std::filesystem::path path)
   // check for errors
   GLint success = -1;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (success == 0) {
-    std::cerr << "[SHADER] compilation log " << path.string() << ":\n"
-              << log << std::endl;
-  } else {
+  if (success != 0) {
     std::cerr << "[SHADER] compilation log " << path.string() << ":\n"
               << log << std::endl;
   }
