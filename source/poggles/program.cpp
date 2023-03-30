@@ -22,9 +22,6 @@ auto poggles::checkLinkSuccess(program_id identifier) -> bool
     return false;
   }
 
-  //std::cout << "[PROGRAM] successfully compiled and linked program"
-            //<< std::endl;
-
   return true;
 }
 
@@ -187,28 +184,31 @@ auto poggles::program::set_dmat4(const std::string& name,
 }
 
 void poggles::program::set_uvec2(const std::string& name,
-                                std::span<const std::uint32_t, 2> value) const
+                                 std::span<const std::uint32_t, 2> value) const
 {
-  glUniform2uiv(glGetUniformLocation(
-                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
-               1,
-               value.data());
+  glUniform2uiv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()),
+                           name.c_str()),
+      1,
+      value.data());
 }
 
 void poggles::program::set_uvec3(const std::string& name,
-                                std::span<const std::uint32_t, 3> value) const
+                                 std::span<const std::uint32_t, 3> value) const
 {
-  glUniform3uiv(glGetUniformLocation(
-                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
-               1,
-               value.data());
+  glUniform3uiv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()),
+                           name.c_str()),
+      1,
+      value.data());
 }
 
 void poggles::program::set_uvec4(const std::string& name,
-                                std::span<const std::uint32_t, 4> value) const
+                                 std::span<const std::uint32_t, 4> value) const
 {
-  glUniform4uiv(glGetUniformLocation(
-                   static_cast<GLuint>(m_program_handle.value()), name.c_str()),
-               1,
-               value.data());
+  glUniform4uiv(
+      glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()),
+                           name.c_str()),
+      1,
+      value.data());
 }
