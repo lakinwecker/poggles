@@ -24,12 +24,10 @@ class Recipe(ConanFile):
             "glad/0.1.36",
             "stb/cci.20220909",
             "opengl/system",
+            "doctest/2.4.10"
         ]
         for r in requirements:
             self.requires(r)
-
-    def build_requirements(self):
-        self.test_requires("doctest/2.4.9")
 
     def build(self):
         cmake = CMake(self)
