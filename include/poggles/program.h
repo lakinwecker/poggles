@@ -52,6 +52,7 @@ public:
   auto set_uint(const std::string& name, unsigned value) const -> void;
   auto set_float(const std::string& name, float value) const -> void;
 
+  void set_vec2(const std::string& name, std::span<const float, 2> value) const;
   void set_vec3(const std::string& name, std::span<const float, 3> value) const;
   void set_vec4(const std::string& name, std::span<const float, 4> value) const;
   void set_mat4(const std::string& name,
@@ -62,6 +63,10 @@ public:
                  std::span<const double, 3> value) const -> void;
   auto set_dmat4(const std::string& name,
                  std::span<const double, 16> value) const -> void;
+
+  void set_uvec2(const std::string& name, std::span<const std::uint32_t, 2> value) const;
+  void set_uvec3(const std::string& name, std::span<const std::uint32_t, 3> value) const;
+  void set_uvec4(const std::string& name, std::span<const std::uint32_t, 4> value) const;
 
   template<size_t N>
   void set_float_array(const std::string& name,

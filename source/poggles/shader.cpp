@@ -65,9 +65,6 @@ auto poggles::compileShader(shader_id shader, std::filesystem::path path)
   if (success == 0) {
     std::cerr << "[SHADER] compilation log " << path.string() << ":\n"
               << log << std::endl;
-  } else {
-    std::cerr << "[SHADER] compilation log " << path.string() << ":\n"
-              << log << std::endl;
   }
   return success != 0;
 }
