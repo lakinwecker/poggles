@@ -4,7 +4,7 @@ from conan.tools.cmake import CMake
 
 class Recipe(ConanFile):
     name = "poggles"
-    version = "0.2.0-alpha1"
+    version = "0.2.0"
 
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps", "VirtualRunEnv"
