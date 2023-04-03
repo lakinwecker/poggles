@@ -29,7 +29,7 @@ class Recipe(ConanFile):
             self.requires(r)
 
     def build_requirements(self):
-        self.test_requires("doctest/2.4.9")
+        self.test_requires("doctest/2.4.10")
 
     def build(self):
         cmake = CMake(self)
