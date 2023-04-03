@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     poggles
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "Poggles is for OpenGGL EnvironmentS"
     HOMEPAGE_URL "https://github.com/lakinwecker/poggles"
     LANGUAGES CXX
