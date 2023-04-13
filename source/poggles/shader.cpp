@@ -16,6 +16,8 @@ auto poggles::addDefinesToShaderSource(
     defineString += std::string("#define ") + define + std::string("\n");
   }
 
+  // The first line of non-comment non-whitespace code must be the version
+  // number. We put the defines on the first line after this
   auto versionLoc = source.find("#version");
   auto newLineLoc = source.find('\n', versionLoc);
 
