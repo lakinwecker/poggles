@@ -7,7 +7,29 @@
 
 #include "poggles/shader.h"
 
-auto poggles::compileShader(shader_id shader, std::filesystem::path path)
+auto poggles::addDefinesToShaderSource(
+    std::string source, std::initializer_list<std::string> const& defines)
+    -> std::string
+{
+  std::string defineString;
+  for (auto define : defines) {
+    defineString += std::string("#define ") + define + std::string("\n");
+  }
+
+  auto versionLoc = source.find("#version");
+  auto newLineLoc = source.find('\n', versionLoc);
+
+  if (newLineLoc != std::string::npos && newLineLoc + 1 < source.length()) {
+    source.insert(newLineLoc + 1, defineString.c_str());
+  }
+  // else do nothing, the shader will fail to compile anyways
+
+  return source;
+}
+
+auto poggles::compileShader(shader_id shader,
+                            std::filesystem::path path,
+                            std::initializer_list<std::string> const& defines)
     -> bool
 {
   // read shader source
@@ -29,6 +51,9 @@ auto poggles::compileShader(shader_id shader, std::filesystem::path path)
 
     // convert stream into string
     source_string = source_stream.str();
+    source_string = poggles::addDefinesToShaderSource(source_string, defines);
+
+    // Add defines to shader
   } catch (std::ifstream::failure const&) {
     std::string error_msg;
     // TODO: get this working generally
