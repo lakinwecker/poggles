@@ -26,6 +26,14 @@ public:
   }
 };
 
-auto compileShader(shader_id shader, std::filesystem::path path) -> bool;
+auto compileShader(shader_id shader,
+                   std::filesystem::path path,
+                   // defines provided in the form "NAME [optional value]"
+                   std::initializer_list<std::string> const& defines = {})
+    -> bool;
+
+auto addDefinesToShaderSource(std::string source,
+                              std::initializer_list<std::string> const& defines)
+    -> std::string;
 
 }  // namespace poggles

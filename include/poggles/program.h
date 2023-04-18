@@ -30,9 +30,13 @@ class POGGLES_EXPORT program
 {
 public:
   program(
-      std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles);
+      std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+      // defines provided in the form "NAME [optional value]"
+      std::initializer_list<std::string> const& defines = {});
   program(std::filesystem::path const& vertex_path,
-          std::filesystem::path const& fragment_path);
+          std::filesystem::path const& fragment_path,
+          // defines provided in the form "NAME [optional value]"
+          std::initializer_list<std::string> const& defines = {});
 
   // Public interface
   auto recompile() -> bool;
@@ -64,9 +68,12 @@ public:
   auto set_dmat4(const std::string& name,
                  std::span<const double, 16> value) const -> void;
 
-  void set_uvec2(const std::string& name, std::span<const std::uint32_t, 2> value) const;
-  void set_uvec3(const std::string& name, std::span<const std::uint32_t, 3> value) const;
-  void set_uvec4(const std::string& name, std::span<const std::uint32_t, 4> value) const;
+  void set_uvec2(const std::string& name,
+                 std::span<const std::uint32_t, 2> value) const;
+  void set_uvec3(const std::string& name,
+                 std::span<const std::uint32_t, 3> value) const;
+  void set_uvec4(const std::string& name,
+                 std::span<const std::uint32_t, 4> value) const;
 
   template<size_t N>
   void set_float_array(const std::string& name,
@@ -90,7 +97,8 @@ auto checkLinkSuccess(program_id identifier) -> bool;
 
 auto compileProgram(
     program_id program,
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
-    -> bool;
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    // defines provided in the form "NAME [optional value]"
+    std::initializer_list<std::string> const& defines = {}) -> bool;
 
 }  // namespace poggles

@@ -27,14 +27,14 @@ auto poggles::checkLinkSuccess(program_id identifier) -> bool
 
 auto poggles::compileProgram(
     program_id program,
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
-    -> bool
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::initializer_list<std::string> const& defines) -> bool
 {
   bool status = true;
 
   for (auto [type, filename] : shaderFiles) {
     shader_handle shader(type);
-    status &= compileShader(shader.value(), filename);
+    status &= compileShader(shader.value(), filename, defines);
     gl::attachShader(program, shader.value());
     // shader_handle should be safe to go out of scope after being attached
   }
@@ -45,21 +45,24 @@ auto poggles::compileProgram(
 }
 
 poggles::program::program(
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles)
+    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::initializer_list<std::string> const& defines)
 {
-  if (!compileProgram(m_program_handle.value(), shaderFiles)) {
+  if (!compileProgram(m_program_handle.value(), shaderFiles, defines)) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }
 
 poggles::program::program(std::filesystem::path const& vertex_path,
-                          std::filesystem::path const& fragment_path)
+                          std::filesystem::path const& fragment_path,
+                          std::initializer_list<std::string> const& defines)
     : m_vertex_path(vertex_path)
     , m_fragment_path(fragment_path)
 {
   if (!compileProgram(m_program_handle.value(),
                       {{GL_VERTEX_SHADER, vertex_path.string()},
-                       {GL_FRAGMENT_SHADER, fragment_path.string()}}))
+                       {GL_FRAGMENT_SHADER, fragment_path.string()}},
+                      defines))
   {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
