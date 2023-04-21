@@ -1,0 +1,5 @@
+function (poggles_find_dependencies_thirdparty)
+    find_package(glad REQUIRED)
+    find_package(stb REQUIRED)
+    find_package(opengl_system REQUIRED)
+endfunction()
