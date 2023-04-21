@@ -1,6 +1,7 @@
 .idea/
 .vs/
 .vscode/
+.cache/
 build/
 cmake/open-cpp-coverage.cmake
 cmake-build-*/
@@ -12,3 +13,5 @@ conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
 conan.lock
+poetry.lock
+compile_commands.json

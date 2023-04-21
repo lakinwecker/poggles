@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.14)
 
 include(cmake/prelude.cmake)
 
+file(READ "version.txt" ver)
+string(STRIP ${ver} ver)
 project(
     poggles
-    VERSION 0.2.0
+    VERSION ${ver}
     DESCRIPTION "Poggles is for OpenGGL EnvironmentS"
     HOMEPAGE_URL "https://github.com/lakinwecker/poggles"
     LANGUAGES CXX
