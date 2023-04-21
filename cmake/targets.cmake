@@ -1,4 +1,7 @@
+include(cmake/dependencies.cmake)
+
 function (poggles_declare_library BASE_DIR)
+    poggles_dependency_targets()
     add_library(
         poggles_poggles
         "${BASE_DIR}source/poggles/buffer.cpp"
@@ -50,9 +53,7 @@ function (poggles_declare_library BASE_DIR)
 
     target_link_libraries(
         poggles_poggles PRIVATE
-        glad::glad
-        stb::stb
-        opengl::opengl
+        ${POGGLES_DEPENDENCY_TARGETS}
     )
 
 endfunction()

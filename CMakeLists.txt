@@ -17,6 +17,7 @@ include(cmake/targets.cmake)
 
 # ---- Dependencies ----
 poggles_find_dependencies_thirdparty()
+poggles_dependency_targets()
 
 # ---- Declare library ----
 poggles_declare_library("")
