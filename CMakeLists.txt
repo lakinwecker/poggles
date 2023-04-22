@@ -10,10 +10,12 @@ project(
     LANGUAGES CXX
 )
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
-include(cmake/dependencies.cmake)
-include(cmake/targets.cmake)
+include(poggles_dependencies)
+include(poggles_targets)
 
 # ---- Dependencies ----
 poggles_find_dependencies_thirdparty()

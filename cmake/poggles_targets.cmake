@@ -1,4 +1,4 @@
-include(cmake/dependencies.cmake)
+include(poggles_dependencies)
 
 function (poggles_declare_library BASE_DIR)
     poggles_dependency_targets()
