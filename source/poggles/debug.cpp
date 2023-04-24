@@ -9,7 +9,7 @@ void poggles::gl_debug_output(GLenum source,
                               GLsizei,
                               const GLchar* message,
                               const void*)
-{ // NOLINT
+{  // NOLINT
   // ignore non-significant error/warning codes
   // if(identifier == 131169 || identifier == 131185 || identifier == 131218 ||
   // identifier == 131204) return;
