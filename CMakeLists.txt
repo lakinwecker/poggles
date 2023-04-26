@@ -16,10 +16,12 @@ include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 include(poggles_dependencies)
 include(poggles_targets)
+include(givde_windows)
 
 # ---- Dependencies ----
 poggles_find_dependencies_thirdparty()
 poggles_dependency_targets()
+givde_attempt_at_sanity_with_windows()
 
 # ---- Declare library ----
 poggles_declare_library("")
