@@ -5,6 +5,7 @@ project(pogglesTests LANGUAGES CXX)
 include(../cmake/project-is-top-level.cmake)
 include(../cmake/folders.cmake)
 include(../cmake/windows-set-path.cmake)
+include(poggles_dependencies)
 
 # ---- Dependencies ----
 
@@ -13,8 +14,9 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
 endif()
 
-find_package(glad REQUIRED)
-find_package(doctest REQUIRED)
+
+poggles_find_dependencies_thirdparty()
+poggles_dependency_targets()
 
 # ---- Tests ----
 
@@ -22,8 +24,7 @@ add_executable(poggles_test source/poggles_test.cpp)
 target_link_libraries(
     poggles_test PRIVATE
     poggles::poggles
-    glad::glad
-    doctest::doctest
+    ${POGGLES_DEPENDENCY_TARGETS}
 )
 target_compile_features(poggles_test PRIVATE cxx_std_20)
 
