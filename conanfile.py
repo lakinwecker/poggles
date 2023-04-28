@@ -1,9 +1,11 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake
 
+import json
 
 class Recipe(ConanFile):
     v = open("version.txt").readline().strip()
+
     name = "poggles"
     version = v
 
@@ -22,14 +24,11 @@ class Recipe(ConanFile):
         self.folders.generators = "conan"
 
     def requirements(self):
-        requirements = [
-            "glad/0.1.36",
-            "stb/cci.20220909",
-            "opengl/system",
-            "doctest/2.4.10"
-        ]
-        for r in requirements:
-            self.requires(r)
+        f = open('dependencies.json')
+        deps = json.load(f)
+
+        for n, v in deps.items():
+            self.requires(n + "/" + v["current"])
 
     def build(self):
         cmake = CMake(self)

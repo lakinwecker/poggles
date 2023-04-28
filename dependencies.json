@@ -1,0 +1,18 @@
+{
+    "doctest": {
+        "range": "2.x",
+        "current": "2.4.10"
+    },
+    "glad": {
+        "range": "0.x",
+        "current": "0.1.36"
+    },
+    "opengl": {
+        "range": "system",
+        "current": "system"
+    },
+    "stb": {
+        "range": "cci.20220909",
+        "current": "cci.20220909"
+    }
+}
