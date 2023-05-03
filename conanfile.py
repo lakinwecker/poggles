@@ -3,8 +3,13 @@ from conan.tools.cmake import CMake
 
 import json
 
+deps = {}
+
 class Recipe(ConanFile):
     v = open("version.txt").readline().strip()
+    d = open("dependencies.json")
+    global deps
+    deps = json.load(d)
 
     name = "poggles"
     version = v
@@ -13,7 +18,7 @@ class Recipe(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps", "VirtualRunEnv"
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports = "version.txt"
+    exports = "version.txt", "dependencies.json"
     exports_sources = "version.txt", "CMakeLists.txt", "CMakePresets.json", "cmake/*", "include/*", "source/*"
 
     def configure(self):
@@ -24,9 +29,7 @@ class Recipe(ConanFile):
         self.folders.generators = "conan"
 
     def requirements(self):
-        f = open('dependencies.json')
-        deps = json.load(f)
-
+        global deps
         for n, v in deps.items():
             self.requires(n + "/" + v["current"])
 
