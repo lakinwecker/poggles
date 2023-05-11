@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(cmake/prelude.cmake)
 
 file(READ "version.txt" ver)
