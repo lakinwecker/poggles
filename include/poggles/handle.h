@@ -166,4 +166,14 @@ public:
   }
 };
 
+class framebuffer_handle : public gen_delete_handle<framebuffer_id>
+{
+public:
+  framebuffer_handle()
+      : gen_delete_handle<framebuffer_id>(glDeleteFramebuffers,
+                                          glGenFramebuffers)
+  {
+  }
+};
+
 }  // namespace poggles

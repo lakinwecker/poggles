@@ -72,5 +72,6 @@ POGGLES_GL_TYPE_CLASS(program_id)
 POGGLES_GL_TYPE_CLASS(shader_id)
 POGGLES_GL_TYPE_CLASS(buffer_id)
 POGGLES_GL_TYPE_CLASS(vertex_array_id)
+POGGLES_GL_TYPE_CLASS(framebuffer_id)
 // TODO Connect texture format to texture ID
 POGGLES_GL_TYPE_CLASS(texture_id)
