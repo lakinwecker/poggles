@@ -25,6 +25,8 @@ public:
                   static_cast<GLuint>(m_texture_handle.value()));
   }
 
+  inline auto target() const -> GLenum { return m_original_target; }
+
   // TODO more general form for these functions
   void load(GLenum target, std::string const& filename, GLint level = 0);
   void load(GLenum target,
