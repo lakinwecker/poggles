@@ -7,8 +7,8 @@
 
 #include "poggles/shader.h"
 
-auto poggles::addDefinesToShaderSource(
-    std::string source, std::initializer_list<std::string> const& defines)
+auto poggles::addDefinesToShaderSource(std::string source,
+                                       std::vector<std::string> const& defines)
     -> std::string
 {
   std::string defineString;
@@ -31,8 +31,7 @@ auto poggles::addDefinesToShaderSource(
 
 auto poggles::compileShader(shader_id shader,
                             std::filesystem::path path,
-                            std::initializer_list<std::string> const& defines)
-    -> bool
+                            std::vector<std::string> const& defines) -> bool
 {
   // read shader source
   std::string source_string;
