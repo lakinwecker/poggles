@@ -23,22 +23,21 @@ public:
 
   void bind(GLenum texture_num = GL_TEXTURE0) const;
 
-  GLenum target;
+  inline auto target() const -> GLenum { return m_target; }
 
 private:
+  GLenum const m_target;
   texture_handle m_texture_handle;
 };
 
-auto loadFromFile(texture& tex,
-                  std::filesystem::path const& filepath,
-                  std::optional<GLenum> target = {},
-                  GLint level = 0) -> bool;
+auto uploadFromFile(texture const& tex,
+                    std::filesystem::path const& filepath,
+                    GLint level = 0) -> bool;
 
-auto loadFromData(texture& tex,
-                  std::variant<float*, uint8_t*> data,
-                  int width,
-                  int height,
-                  int channels,
-                  std::optional<GLenum> target = {},
-                  GLint level = 0) -> bool;
+auto uploadFromData(texture const& tex,
+                    std::variant<float*, uint8_t*> data,
+                    int width,
+                    int height,
+                    int channels,
+                    GLint level = 0) -> bool;
 }  // namespace poggles

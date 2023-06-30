@@ -13,46 +13,36 @@ struct overload : Ts...
 template<class... Ts>
 overload(Ts...) -> overload<Ts...>;
 
-auto poggles::loadFromFile(poggles::texture& tex,
-                           std::filesystem::path const& filename,
-                           std::optional<GLenum> target,
-                           GLint level) -> bool
+auto poggles::uploadFromFile(poggles::texture const& tex,
+                             std::filesystem::path const& filename,
+                             GLint level) -> bool
 {
   int width = 0;
   int height = 0;
   int channels = 0;
   uint8_t* data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-  if (data != nullptr) {
-    if (target.has_value()) {
-      tex.target = *target;
-    }
-    // Call ourselves, but with the relevant data extracted from the
-    // file
-    bool status =
-        loadFromData(tex, data, width, height, channels, target, level);
-    stbi_image_free(data);
-    return status;
-  } else {
+  if (data == nullptr) {
     return false;
   }
+
+  // Call ourselves, but with the relevant data extracted from the
+  // file
+  bool status = uploadFromData(tex, data, width, height, channels, level);
+  stbi_image_free(data);
+  return status;
 }
 
-auto poggles::loadFromData(poggles::texture& tex,
-                           std::variant<float*, uint8_t*> data,
-                           int width,
-                           int height,
-                           int channels,
-                           std::optional<GLenum> target,
-                           GLint level) -> bool
+auto poggles::uploadFromData(poggles::texture const& tex,
+                             std::variant<float*, uint8_t*> data,
+                             int width,
+                             int height,
+                             int channels,
+                             GLint level) -> bool
 {
-  if (target.has_value()) {
-    tex.target = *target;
-  }
-
-  glTexParameteri(tex.target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(tex.target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(tex.target, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(tex.target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(tex.target(), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(tex.target(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(tex.target(), GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(tex.target(), GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   GLenum format = GL_RGB;
   if (channels == 1) {
@@ -67,7 +57,7 @@ auto poggles::loadFromData(poggles::texture& tex,
 
   std::visit(overload {[&](float* pixelData)
                        {
-                         glTexImage2D(tex.target,
+                         glTexImage2D(tex.target(),
                                       level,
                                       static_cast<GLint>(format),
                                       width,
@@ -79,7 +69,7 @@ auto poggles::loadFromData(poggles::texture& tex,
                        },
                        [&](uint8_t* pixelData)
                        {
-                         glTexImage2D(tex.target,
+                         glTexImage2D(tex.target(),
                                       level,
                                       static_cast<GLint>(format),
                                       width,
@@ -94,8 +84,8 @@ auto poggles::loadFromData(poggles::texture& tex,
                 // should be false on a glError
 }
 
-poggles::texture::texture(GLenum in_target)
-    : target(in_target)
+poggles::texture::texture(GLenum target)
+    : m_target(target)
 {
   bind();
 }
@@ -103,7 +93,7 @@ poggles::texture::texture(GLenum in_target)
 void poggles::texture::bind(GLenum texture_num) const
 {
   activate(texture_num);
-  glBindTexture(target, static_cast<GLuint>(m_texture_handle.value()));
+  glBindTexture(m_target, static_cast<GLuint>(m_texture_handle.value()));
 }
 
 poggles::texture::operator GLuint() const
