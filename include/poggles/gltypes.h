@@ -33,11 +33,6 @@ public:
   {
   }
 
-  gltype(gltype<T> const& other) = default;
-  gltype(gltype<T>&&) noexcept = default;
-  auto operator=(const gltype<T>&) -> gltype<T>& = default;
-  auto operator=(gltype<T>&&) noexcept -> gltype<T>& = default;
-
   auto id() const -> T { return m_id; }
   operator T() const { return m_id; }
   operator bool() const { return m_id != 0; }
