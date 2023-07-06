@@ -27,7 +27,7 @@ auto poggles::checkLinkSuccess(program_id identifier) -> bool
 
 auto poggles::compileProgram(
     program_id program,
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
     std::vector<std::string> const& defines) -> bool
 {
   bool status = true;
@@ -45,7 +45,7 @@ auto poggles::compileProgram(
 }
 
 poggles::program::program(
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
     std::vector<std::string> const& defines)
 {
   if (!compileProgram(m_program_handle.value(), shaderFiles, defines)) {
