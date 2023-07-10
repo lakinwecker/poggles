@@ -12,6 +12,13 @@
 namespace poggles
 {
 
+struct shader_desc
+{
+  GLenum type;
+  std::string name;
+  std::string source;
+};
+
 class POGGLES_EXPORT shader_compile_exception : public std::runtime_error
 {
 public:
@@ -26,8 +33,11 @@ public:
   }
 };
 
+auto shaderDescFromFile(GLenum type, std::filesystem::path filename)
+    -> shader_desc;
+
 auto compileShader(shader_id shader,
-                   std::filesystem::path path,
+                   shader_desc shaderDesc,
                    // defines provided in the form "NAME [optional value]"
                    std::vector<std::string> const& defines = {}) -> bool;
 

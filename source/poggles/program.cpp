@@ -4,6 +4,7 @@
 #include "poggles/program.h"
 
 #include "poggles/gl_function.h"
+#include "poggles/shader.h"
 
 auto poggles::checkLinkSuccess(program_id identifier) -> bool
 {
@@ -25,16 +26,15 @@ auto poggles::checkLinkSuccess(program_id identifier) -> bool
   return true;
 }
 
-auto poggles::compileProgram(
-    program_id program,
-    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
-    std::vector<std::string> const& defines) -> bool
+auto poggles::compileProgram(program_id program,
+                             std::vector<shader_desc> const& shaderDescs,
+                             std::vector<std::string> const& defines) -> bool
 {
   bool status = true;
 
-  for (auto [type, filename] : shaderFiles) {
-    shader_handle shader(type);
-    status &= compileShader(shader.value(), filename, defines);
+  for (auto shaderDesc : shaderDescs) {
+    shader_handle shader(shaderDesc.type);
+    status &= compileShader(shader.value(), shaderDesc, defines);
     gl::attachShader(program, shader.value());
     // shader_handle should be safe to go out of scope after being attached
   }
@@ -44,11 +44,10 @@ auto poggles::compileProgram(
   return status & poggles::checkLinkSuccess(program);
 }
 
-poggles::program::program(
-    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
-    std::vector<std::string> const& defines)
+poggles::program::program(std::vector<shader_desc> const& shaderDescs,
+                          std::vector<std::string> const& defines)
 {
-  if (!compileProgram(m_program_handle.value(), shaderFiles, defines)) {
+  if (!compileProgram(m_program_handle.value(), shaderDescs, defines)) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }
@@ -59,11 +58,11 @@ poggles::program::program(std::filesystem::path const& vertex_path,
     : m_vertex_path(vertex_path)
     , m_fragment_path(fragment_path)
 {
-  if (!compileProgram(m_program_handle.value(),
-                      {{GL_VERTEX_SHADER, vertex_path.string()},
-                       {GL_FRAGMENT_SHADER, fragment_path.string()}},
-                      defines))
-  {
+  std::vector<shader_desc> shaderDescs = {
+      poggles::shaderDescFromFile(GL_VERTEX_SHADER, vertex_path),
+      poggles::shaderDescFromFile(GL_FRAGMENT_SHADER, fragment_path)};
+
+  if (!compileProgram(m_program_handle.value(), shaderDescs, defines)) {
     throw poggles::shader_link_exception("Shaders did not link.");
   }
 }

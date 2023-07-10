@@ -29,7 +29,7 @@ public:
 class POGGLES_EXPORT program
 {
 public:
-  program(std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
+  program(std::vector<shader_desc> const& shader,
           // defines provided in the form "NAME [optional value]"
           std::vector<std::string> const& defines = {});
   program(std::filesystem::path const& vertex_path,
@@ -94,10 +94,9 @@ private:
 
 auto checkLinkSuccess(program_id identifier) -> bool;
 
-auto compileProgram(
-    program_id program,
-    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
-    // defines provided in the form "NAME [optional value]"
-    std::vector<std::string> const& defines = {}) -> bool;
+auto compileProgram(program_id program,
+                    std::vector<shader_desc> const& shaderFiles,
+                    // defines provided in the form "NAME [optional value]"
+                    std::vector<std::string> const& defines = {}) -> bool;
 
 }  // namespace poggles
