@@ -21,7 +21,8 @@ auto poggles::uploadFromFile(poggles::texture const& tex,
   int width = 0;
   int height = 0;
   int channels = 0;
-  uint8_t* data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+  uint8_t* data =
+      stbi_load(filename.string().c_str(), &width, &height, &channels, 0);
   if (data == nullptr) {
     return false;
   }
