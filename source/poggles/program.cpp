@@ -27,8 +27,8 @@ auto poggles::checkLinkSuccess(program_id identifier) -> bool
 
 auto poggles::compileProgram(
     program_id program,
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
-    std::initializer_list<std::string> const& defines) -> bool
+    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::vector<std::string> const& defines) -> bool
 {
   bool status = true;
 
@@ -45,8 +45,8 @@ auto poggles::compileProgram(
 }
 
 poggles::program::program(
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
-    std::initializer_list<std::string> const& defines)
+    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::vector<std::string> const& defines)
 {
   if (!compileProgram(m_program_handle.value(), shaderFiles, defines)) {
     throw poggles::shader_link_exception("Shaders did not link.");
@@ -55,7 +55,7 @@ poggles::program::program(
 
 poggles::program::program(std::filesystem::path const& vertex_path,
                           std::filesystem::path const& fragment_path,
-                          std::initializer_list<std::string> const& defines)
+                          std::vector<std::string> const& defines)
     : m_vertex_path(vertex_path)
     , m_fragment_path(fragment_path)
 {

@@ -29,14 +29,13 @@ public:
 class POGGLES_EXPORT program
 {
 public:
-  program(
-      std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
-      // defines provided in the form "NAME [optional value]"
-      std::initializer_list<std::string> const& defines = {});
+  program(std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
+          // defines provided in the form "NAME [optional value]"
+          std::vector<std::string> const& defines = {});
   program(std::filesystem::path const& vertex_path,
           std::filesystem::path const& fragment_path,
           // defines provided in the form "NAME [optional value]"
-          std::initializer_list<std::string> const& defines = {});
+          std::vector<std::string> const& defines = {});
 
   // Public interface
   auto recompile() -> bool;
@@ -97,8 +96,8 @@ auto checkLinkSuccess(program_id identifier) -> bool;
 
 auto compileProgram(
     program_id program,
-    std::initializer_list<std::pair<GLenum, std::string>> const& shaderFiles,
+    std::vector<std::pair<GLenum, std::string>> const& shaderFiles,
     // defines provided in the form "NAME [optional value]"
-    std::initializer_list<std::string> const& defines = {}) -> bool;
+    std::vector<std::string> const& defines = {}) -> bool;
 
 }  // namespace poggles

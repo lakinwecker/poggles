@@ -30,14 +30,18 @@ private:
   texture_handle m_texture_handle;
 };
 
-auto uploadFromFile(texture const& tex,
-                    std::filesystem::path const& filepath,
-                    GLint level = 0) -> bool;
+auto uploadFromFile(
+    texture const& tex,
+    GLenum target,  // Sometimes will differ from original target
+    std::filesystem::path const& filepath,
+    GLint level = 0) -> bool;
 
-auto uploadFromData(texture const& tex,
-                    std::variant<float*, uint8_t*> data,
-                    int width,
-                    int height,
-                    int channels,
-                    GLint level = 0) -> bool;
+auto uploadFromData(
+    texture const& tex,
+    GLenum target,  // Sometimes will differ from original target
+    std::variant<float*, uint8_t*> data,
+    int width,
+    int height,
+    int channels,
+    GLint level = 0) -> bool;
 }  // namespace poggles

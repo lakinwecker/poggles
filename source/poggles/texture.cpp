@@ -14,25 +14,29 @@ template<class... Ts>
 overload(Ts...) -> overload<Ts...>;
 
 auto poggles::uploadFromFile(poggles::texture const& tex,
+                             GLenum target,
                              std::filesystem::path const& filename,
                              GLint level) -> bool
 {
   int width = 0;
   int height = 0;
   int channels = 0;
-  uint8_t* data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+  uint8_t* data =
+      stbi_load(filename.string().c_str(), &width, &height, &channels, 0);
   if (data == nullptr) {
     return false;
   }
 
   // Call ourselves, but with the relevant data extracted from the
   // file
-  bool status = uploadFromData(tex, data, width, height, channels, level);
+  bool status =
+      uploadFromData(tex, target, data, width, height, channels, level);
   stbi_image_free(data);
   return status;
 }
 
 auto poggles::uploadFromData(poggles::texture const& tex,
+                             GLenum target,
                              std::variant<float*, uint8_t*> data,
                              int width,
                              int height,
@@ -57,7 +61,7 @@ auto poggles::uploadFromData(poggles::texture const& tex,
 
   std::visit(overload {[&](float* pixelData)
                        {
-                         glTexImage2D(tex.target(),
+                         glTexImage2D(target,
                                       level,
                                       static_cast<GLint>(format),
                                       width,
@@ -69,7 +73,7 @@ auto poggles::uploadFromData(poggles::texture const& tex,
                        },
                        [&](uint8_t* pixelData)
                        {
-                         glTexImage2D(tex.target(),
+                         glTexImage2D(target,
                                       level,
                                       static_cast<GLint>(format),
                                       width,

@@ -11,6 +11,7 @@ function (poggles_declare_library BASE_DIR)
         "${BASE_DIR}source/poggles/stb_image.cpp"
         "${BASE_DIR}source/poggles/vertex_array.cpp"
         "${BASE_DIR}source/poggles/texture.cpp"
+        "${BASE_DIR}source/poggles/framebuffer.cpp"
         "${BASE_DIR}source/poggles/gl_function.cpp"
     )
     add_library(poggles::poggles ALIAS poggles_poggles)
