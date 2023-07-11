@@ -16,11 +16,12 @@ auto poggles::shaderDescFromFile(GLenum type, std::filesystem::path path)
   // ensure ifstream objects can throw exceptions:
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
-    file.open(path.filename().string().c_str());
+    file.open(path.string().c_str());
     std::stringstream source_stream;
 
     // read file buffer contents into stream
     source_stream << file.rdbuf();
+    source_string = source_stream.str();
 
     // close file handler
     file.close();
@@ -71,11 +72,11 @@ auto poggles::compileShader(shader_id shader,
                             poggles::shader_desc shaderDesc,
                             std::vector<std::string> const& defines) -> bool
 {
-  GLchar const* source_code =
-      addDefinesToShaderSource(shaderDesc.source, defines).c_str();
+  auto source_code = addDefinesToShaderSource(shaderDesc.source, defines);
+  auto sourceCodePtr = source_code.c_str();
 
   // compile shader
-  glShaderSource(shader, 1, &source_code, nullptr);
+  glShaderSource(shader, 1, &sourceCodePtr, nullptr);
   glCompileShader(shader);
 
   // Always log the info, just change the severity
