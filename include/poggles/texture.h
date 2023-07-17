@@ -10,38 +10,38 @@
 #include "poggles/handle.h"
 #include "poggles/poggles_export.hpp"
 
-namespace poggles
-{
-class POGGLES_EXPORT texture
-{
-public:
-  explicit texture(GLenum in_target);
+namespace poggles {
+class POGGLES_EXPORT texture {
+  public:
+    explicit texture(GLenum in_target);
 
-  explicit operator GLuint() const;
+    explicit operator GLuint() const;
 
-  static void activate(GLenum texture_num) { glActiveTexture(texture_num); }
+    static void activate(GLenum texture_num) { glActiveTexture(texture_num); }
 
-  void bind(GLenum texture_num = GL_TEXTURE0) const;
+    void bind(GLenum texture_num = GL_TEXTURE0) const;
 
-  inline auto target() const -> GLenum { return m_target; }
+    inline auto target() const -> GLenum { return m_target; }
 
-private:
-  GLenum const m_target;
-  texture_handle m_texture_handle;
+  private:
+    GLenum const m_target;
+    texture_handle m_texture_handle;
 };
 
 auto uploadFromFile(
-    texture const& tex,
+    texture const &tex,
     GLenum target,  // Sometimes will differ from original target
-    std::filesystem::path const& filepath,
-    GLint level = 0) -> bool;
+    std::filesystem::path const &filepath,
+    GLint level = 0
+) -> bool;
 
 auto uploadFromData(
-    texture const& tex,
+    texture const &tex,
     GLenum target,  // Sometimes will differ from original target
-    std::variant<float*, uint8_t*> data,
+    std::variant<float *, uint8_t *> data,
     int width,
     int height,
     int channels,
-    GLint level = 0) -> bool;
+    GLint level = 0
+) -> bool;
 }  // namespace poggles

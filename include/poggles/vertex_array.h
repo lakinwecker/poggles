@@ -4,23 +4,21 @@
 #include "poggles/handle.h"
 #include "poggles/poggles_export.hpp"
 
-namespace poggles
-{
+namespace poggles {
 
-class POGGLES_EXPORT vertex_array
-{
-public:
-  vertex_array();
+class POGGLES_EXPORT vertex_array {
+  public:
+    vertex_array();
 
-  // Public interface
-  void bind() const { gl::bindVertexArray(m_array_handle.value()); }
-  explicit operator vertex_array_id() const { return m_array_handle.value(); }
-  // TODO: my linting tool says that unbind() can be static. It's right, it can
-  // be static.
-  //       My question is: Should it be static?
-  void unbind() const { gl::bindVertexArray({}); }
+    // Public interface
+    void bind() const { gl::bindVertexArray(m_array_handle.value()); }
+    explicit operator vertex_array_id() const { return m_array_handle.value(); }
+    // TODO: my linting tool says that unbind() can be static. It's right, it can
+    // be static.
+    //       My question is: Should it be static?
+    void unbind() const { gl::bindVertexArray({}); }
 
-private:
-  vertex_array_handle m_array_handle;
+  private:
+    vertex_array_handle m_array_handle;
 };
 }  // namespace poggles

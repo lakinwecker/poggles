@@ -1,8 +1,8 @@
 #pragma once
 
-#include <concepts>
-
 #include <glad/glad.h>
+
+#include <concepts>
 
 #include "poggles/poggles_export.hpp"
 
@@ -14,34 +14,28 @@ concept GLuintValued = requires(T a) {
 // clang-format on
 
 template<typename T>
-class gltype
-{
-protected:
-  T m_id;
-  // Protected constructor so it can't be created directly (Should only be
-  // created using handle class)
-  explicit gltype(T in_id)
-      : m_id(in_id)
-  {
-  }
+class gltype {
+  protected:
+    T m_id;
+    // Protected constructor so it can't be created directly (Should only be
+    // created using handle class)
+    explicit gltype(T in_id)
+        : m_id(in_id) {}
 
-public:
-  // TODO if this is extended to GLint's as well, sometimes -1 is the invalid
-  // case. Figure out how to handle that
-  gltype()
-      : m_id(0)
-  {
-  }
+  public:
+    // TODO if this is extended to GLint's as well, sometimes -1 is the invalid
+    // case. Figure out how to handle that
+    gltype()
+        : m_id(0) {}
 
-  auto id() const -> T { return m_id; }
-  operator T() const { return m_id; }
-  operator bool() const { return m_id != 0; }
+    auto id() const -> T { return m_id; }
+    operator T() const { return m_id; }
+    operator bool() const { return m_id != 0; }
 };
 
 // Forward definition of handle
 // Allows handle to construct gltypes
-namespace poggles
-{
+namespace poggles {
 template<typename T>
 class handle;
 }  // namespace poggles
