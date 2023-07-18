@@ -1,9 +1,8 @@
 #include <doctest/doctest.h>
 #include <poggles/shader.h>
 
-TEST_CASE("Shader define insertion")
-{
-  std::string shaderSource = R"(
+TEST_CASE("Shader define insertion") {
+    std::string shaderSource = R"(
 // This comment exists to pad the file
 
 #version 410
@@ -16,9 +15,10 @@ int main()
 }
 )";
 
-  std::string generatedSource = poggles::addDefinesToShaderSource(
-      shaderSource, {"NECESSARY_TO_COMPILE", "JUST_FOR_FUN 1"});
-  std::string expectedSource = R"(
+    std::string generatedSource = poggles::addDefinesToShaderSource(
+        shaderSource, {"NECESSARY_TO_COMPILE", "JUST_FOR_FUN 1"}
+    );
+    std::string expectedSource = R"(
 // This comment exists to pad the file
 
 #version 410
@@ -33,5 +33,5 @@ int main()
 }
 )";
 
-  CHECK(generatedSource == expectedSource);
+    CHECK(generatedSource == expectedSource);
 }
