@@ -23,7 +23,7 @@ class POGGLES_EXPORT shader_link_exception : public std::runtime_error {
 class POGGLES_EXPORT program {
   public:
     program(
-        std::vector<std::pair<GLenum, std::string>> const &shaderFiles,
+        std::vector<shader_desc> const &shader,
         // defines provided in the form "NAME [optional value]"
         std::vector<std::string> const &defines = {}
     );
@@ -81,7 +81,7 @@ auto checkLinkSuccess(program_id identifier) -> bool;
 
 auto compileProgram(
     program_id program,
-    std::vector<std::pair<GLenum, std::string>> const &shaderFiles,
+    std::vector<shader_desc> const &shaderFiles,
     // defines provided in the form "NAME [optional value]"
     std::vector<std::string> const &defines = {}
 ) -> bool;
