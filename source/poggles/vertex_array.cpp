@@ -2,7 +2,4 @@
 
 #include "poggles/vertex_array.h"
 
-poggles::vertex_array::vertex_array()
-{
-  bind();
-}
+poggles::vertex_array::vertex_array() { bind(); }

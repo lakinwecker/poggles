@@ -9,8 +9,7 @@
 // Typesafe OpenGL functions. Will only accept *_id classes from gltypes.h
 //------------------------------------------------------------------------------
 
-namespace poggles::gl
-{
+namespace poggles::gl {
 auto POGGLES_EXPORT bindBuffer(GLenum target, buffer_id buffer) -> void;
 
 auto POGGLES_EXPORT bindVertexArray(vertex_array_id array) -> void;
