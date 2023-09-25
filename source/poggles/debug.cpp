@@ -13,7 +13,7 @@ void poggles::gl_debug_output(GLenum source,
     // ignore non-significant error/warning codes
     // if(identifier == 131169 || identifier == 131185 || identifier == 131218 ||
     // identifier == 131204) return;
-    if (identifier == 131204) return;
+    if (identifier == 131'204) return;
 
     std::string sourceStr;
     std::string typeStr;

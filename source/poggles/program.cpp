@@ -165,7 +165,7 @@ auto poggles::program::set_dmat4(std::string const &name, std::span<double const
     );
 }
 
-void poggles::program::set_uvec2(std::string const &name, std::span<const std::uint32_t, 2> value)
+void poggles::program::set_uvec2(std::string const &name, std::span<std::uint32_t const, 2> value)
     const {
     glUniform2uiv(
         glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()), name.c_str()),
@@ -174,7 +174,7 @@ void poggles::program::set_uvec2(std::string const &name, std::span<const std::u
     );
 }
 
-void poggles::program::set_uvec3(std::string const &name, std::span<const std::uint32_t, 3> value)
+void poggles::program::set_uvec3(std::string const &name, std::span<std::uint32_t const, 3> value)
     const {
     glUniform3uiv(
         glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()), name.c_str()),
@@ -183,7 +183,7 @@ void poggles::program::set_uvec3(std::string const &name, std::span<const std::u
     );
 }
 
-void poggles::program::set_uvec4(std::string const &name, std::span<const std::uint32_t, 4> value)
+void poggles::program::set_uvec4(std::string const &name, std::span<std::uint32_t const, 4> value)
     const {
     glUniform4uiv(
         glGetUniformLocation(static_cast<GLuint>(m_program_handle.value()), name.c_str()),

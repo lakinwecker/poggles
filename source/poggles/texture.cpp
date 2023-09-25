@@ -22,7 +22,9 @@ auto poggles::uploadFromFile(
     int height    = 0;
     int channels  = 0;
     uint8_t *data = stbi_load(filename.string().c_str(), &width, &height, &channels, 0);
-    if (data == nullptr) { return false; }
+    if (data == nullptr) {
+        return false;
+    }
 
     // Call ourselves, but with the relevant data extracted from the
     // file
@@ -83,7 +85,8 @@ auto poggles::uploadFromData(
                     GL_UNSIGNED_BYTE,
                     pixelData
                 );
-            }},
+            }
+        },
         data
     );
     return true;  // TODO: Consider how to handle errors better in poggles - this
