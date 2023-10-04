@@ -27,7 +27,9 @@ auto poggles::addTexture2D(
     bool status = true;
 
     GLenum FBO_STATUS = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (FBO_STATUS != GL_FRAMEBUFFER_COMPLETE) { status = false; }
+    if (FBO_STATUS != GL_FRAMEBUFFER_COMPLETE) {
+        status = false;
+    }
 
     return status;
 }
