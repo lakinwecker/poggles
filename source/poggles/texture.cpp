@@ -1,8 +1,8 @@
-#include <stdexcept>
-
 #include "poggles/texture.h"
 
 #include "stb_image.h"
+
+#include <stdexcept>
 
 // https://www.cppstories.com/2018/09/visit-variants/
 template<class... Ts>

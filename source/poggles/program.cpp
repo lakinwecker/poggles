@@ -1,10 +1,10 @@
-#include <iostream>
-#include <vector>
-
 #include "poggles/program.h"
 
 #include "poggles/gl_function.h"
 #include "poggles/shader.h"
+
+#include <iostream>
+#include <vector>
 
 auto poggles::checkLinkSuccess(program_id identifier) -> bool {
     GLint success = -1;
