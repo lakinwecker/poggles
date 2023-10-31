@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include "poggles/framebuffer.h"
+
+#include <iostream>
 
 using namespace poggles;
 

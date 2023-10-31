@@ -1,6 +1,6 @@
-#include <regex>
-
 #include "poggles/debug.h"
+
+#include <regex>
 
 void poggles::gl_debug_output(GLenum source,
                               GLenum type,

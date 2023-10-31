@@ -1,11 +1,11 @@
+#include "poggles/shader.h"
+
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <sstream>
 #include <vector>
-
-#include "poggles/shader.h"
 
 auto poggles::shaderDescFromFile(GLenum type, std::filesystem::path path) -> poggles::shader_desc {
     std::string source_string;
